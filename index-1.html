@@ -1,0 +1,3608 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>방울이의 물 마시기 대모험</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.26.2/babel.min.js"></script>
+</head>
+<body class="m-0 p-0 overflow-hidden bg-sky-100">
+  <div id="root"></div>
+  <script type="text/babel">
+
+const { useState, useEffect, useRef, useCallback } = React;
+
+const Icon = ({ children, className = 'w-5 h-5' }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    {children}
+  </svg>
+);
+
+const Volume2 = (p) => <Icon {...p}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><path d="M15.54 8.46a5 5 0 0 1 0 7.07" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14" /></Icon>;
+const VolumeX = (p) => <Icon {...p}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><line x1="22" y1="9" x2="16" y2="15" /><line x1="16" y1="9" x2="22" y2="15" /></Icon>;
+const Music = (p) => <Icon {...p}><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></Icon>;
+const Star = (p) => <Icon {...p}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></Icon>;
+const Sparkles = (p) => <Icon {...p}><path d="M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z" /><path d="M5 3v4" /><path d="M19 17v4" /><path d="M3 5h4" /><path d="M17 19h4" /></Icon>;
+const RotateCcw = (p) => <Icon {...p}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></Icon>;
+const ChevronLeft = (p) => <Icon {...p}><polyline points="15 18 9 12 15 6" /></Icon>;
+const ChevronRight = (p) => <Icon {...p}><polyline points="9 18 15 12 9 6" /></Icon>;
+const Wand2 = (p) => <Icon {...p}><path d="M15 4V2" /><path d="M15 16v-2" /><path d="M8 9h2" /><path d="M20 9h2" /><path d="M17.8 11.8 19 13" /><path d="M15 9h0" /><path d="M17.8 6.2 19 5" /><path d="m3 21 9-9" /><path d="M12.2 6.2 11 5" /></Icon>;
+const ClipboardCheck = (p) => <Icon {...p}><rect x="8" y="2" width="8" height="4" rx="1" /><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="m9 14 2 2 4-4" /></Icon>;
+const Mic = (p) => <Icon {...p}><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><line x1="12" y1="19" x2="12" y2="22" /></Icon>;
+const MicOff = (p) => <Icon {...p}><line x1="2" y1="2" x2="22" y2="22" /><path d="M18.89 13.23A7.12 7.12 0 0 0 19 12v-2" /><path d="M5 10v2a7 7 0 0 0 12 5" /><path d="M15 9.34V5a3 3 0 0 0-5.68-1.33" /><line x1="12" y1="19" x2="12" y2="22" /></Icon>;
+const Play = (p) => <Icon {...p}><polygon points="6 3 20 12 6 21 6 3" /></Icon>;
+const Pause = (p) => <Icon {...p}><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></Icon>;
+const X = (p) => <Icon {...p}><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></Icon>;
+const AlertCircle = (p) => <Icon {...p}><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></Icon>;
+const KeyRound = (p) => <Icon {...p}><path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></Icon>;
+const Droplets = (p) => <Icon {...p}><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z" /><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97" /></Icon>;
+const Home = (p) => <Icon {...p}><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></Icon>;
+const School = (p) => <Icon {...p}><path d="M14 22v-4a2 2 0 1 0-4 0v4" /><path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2" /><path d="M18 5v17" /><path d="m4 6 8-4 8 4" /><path d="M6 5v17" /><circle cx="12" cy="9" r="2" /></Icon>;
+const Award = (p) => <Icon {...p}><circle cx="12" cy="8" r="6" /><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" /></Icon>;
+const RefreshCw = (p) => <Icon {...p}><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M8 16H3v5" /></Icon>;
+const ArrowRight = (p) => <Icon {...p}><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></Icon>;
+const Clock = (p) => <Icon {...p}><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></Icon>;
+
+/* ============================================================================
+ * 방울이의 물 마시기 대모험 (초등학교 3학년 영양교육 10분 시연용 React 웹 게임)
+ * - 깔끔하고 가독성 높은 파스텔 카툰 UI (1920x1080 & 1366x768 최적화)
+ * - Web Audio API 배경음악(BGM) + 효과음(SFX) 탑재
+ * - 몸속 물 게이지 0% → 100% 단계별 채우기 연출 (+delta 팝업 & 100% 달성 축하)
+ * ============================================================================ */
+
+const BANGUL_SYSTEM_INSTRUCTION = `너는 초등학교 3학년 영양교육 게임의 캐릭터 '방울이'야.
+[규칙]
+- 쉬운 말, 다정한 반말체, 최대 2문장(70자 이내), 이모지 1개까지.
+- 선택을 절대 틀렸다고 하지 않고 먼저 인정한 뒤 "왜 골랐어?"로 묻는다. 주스를 골라도 "목이 마를 땐 몸이 뭐가 필요할까?"로 연결한다.
+- "선생님이 시켜서요" 류 → "우리 몸에 물이 왜 필요했지?"로 되묻는다. "다른 음료엔 물이 없어요" 류 오개념은 부드럽게 바로잡는다.
+- 우유 등 다른 음료의 역할은 부정하지 않는다("목마를 땐 물, 우유는 간식 친구").
+- 의학적 단정, 실패 연출, 점수, 순위, 연속일수, 친구와의 비교, 우열 표현은 하지 않는다.
+- 반드시 JSON 형식으로만 응답한다:
+{"valid_reason": true/false, "misconception": "없음 또는 내용", "expression": "웃음/갸웃/놀람/응원", "reply": "방울이 말"}`;
+
+const DRINKS = [
+  { id: 'water', key: '1', name: '물', emoji: '💧', fridgeQuote: '목마를 땐 나 먼저!' },
+  { id: 'soda', key: '2', name: '탄산음료', emoji: '🥤', fridgeQuote: '나도 있어!' },
+  { id: 'juice', key: '3', name: '과일주스', emoji: '🧃', fridgeQuote: '나 먼저 마셔!' },
+  { id: 'milk', key: '4', name: '우유', emoji: '🥛', fridgeQuote: '나는 간식 친구야!' },
+  { id: 'sports', key: '5', name: '이온음료', emoji: '⚡', fridgeQuote: '시원해 보이지?' },
+];
+
+const REASON_SENTENCE_CHIPS = [
+  '땀으로 나간 물을 채워 줘요',
+  '목이 마를 땐 물이 몸에 필요해요',
+  '설탕이 없어서 갈증이 잘 풀려요',
+  '물도 몸에 필요하구나 생각했어요',
+];
+
+const REASON_QUICK_CHIPS = ['선생님이 시켜서요', '맛있어서요'];
+
+const STAGE3_REASON_CHIPS = [
+  '집에서도 목마를 땐 물 먼저 마셔요',
+  '목마를 땐 물, 우유는 간식 친구예요',
+  '주스보다 물이 갈증을 잘 풀어 줘요',
+  '물도 몸에 필요해서 물 먼저 마실래요',
+];
+
+const STAGE2_QUICK_REASONS = [
+  '땀 흘린 뒤 물을 마시면 몸이 시원해져요',
+  '물은 설탕이 없어서 목이 안 답답해요',
+  '몸속에 물이 많아야 힘이 나요',
+  '물 마시면 머리가 맑아져요',
+];
+
+const STAGE2_LEARNED_CHIPS = [
+  '친구 말 들으니 물이 힘도 나게 해 줘요',
+  '설탕 없는 물이 갈증에 좋다는 걸 알았어요',
+  '둘이 함께 생각하니까 이유가 더 많아졌어요',
+];
+
+const DIFFICULT_SITUATIONS = [
+  {
+    id: 'school_play',
+    place: '학교',
+    title: '노느라 잊어요',
+    emoji: '🏃',
+    solutions: ['쉬는 시간 종 울리면 바로 한 모금', '운동장 가기 전 물병 챙기기'],
+    defaults: { when: '쉬는 시간 종이 울리면', where: '교실 정수기 앞에서', how: '놀기 전에 물 한 컵 마시기' },
+    recommendedNames: ['쉬는 시간 물 요정 작전', '놀기 전 한 모금 작전', '종소리 물컵 탐험대'],
+  },
+  {
+    id: 'school_where',
+    place: '학교',
+    title: '어디서 마실지 몰라요',
+    emoji: '🧭',
+    solutions: ['교실 앞 정수기 위치 표시하기', '내 물병을 책상 옆에 두기'],
+    defaults: { when: '수업이 끝나고 바로', where: '우리 반 앞 정수기에서', how: '개인 물병에 받아 마시기' },
+    recommendedNames: ['정수기 보물지도 작전', '책상 옆 물병 지키미', '학교 물길 탐정 작전'],
+  },
+  {
+    id: 'school_taste',
+    place: '학교',
+    title: '물맛이 심심해요',
+    emoji: '😋',
+    solutions: ['시원한 물로 한 모금씩 나눠 마시기', '좋아하는 컵·물병에 담아 마시기'],
+    defaults: { when: '점심 먹고 목마를 때', where: '교실 내 자리에서', how: '좋아하는 물병으로 시원하게 마시기' },
+    recommendedNames: ['반짝 물병 마법 작전', '한 모금 톡톡 작전', '시원한 방울이 친구 작전'],
+  },
+  {
+    id: 'home_juice',
+    place: '집',
+    title: '냉장고에 주스가 먼저 보여요',
+    emoji: '🧊',
+    solutions: ['물병을 냉장고 앞줄에 두기', '주스 보기 전에 물 한 컵 먼저 마시기'],
+    defaults: { when: '집에 와서 냉장고 열 때', where: '부엌 식탁에서', how: '앞줄 물병에서 물 한 컵 먼저 마시기' },
+    recommendedNames: ['냉장고 물 먼저 작전', '앞줄 물병 수호대', '주스 유혹 탈출 작전'],
+  },
+  {
+    id: 'home_cup',
+    place: '집',
+    title: '물컵이 어디 있는지 몰라요',
+    emoji: '🥤',
+    solutions: ['내 전용 물컵 자리를 정해 두기', '식탁 위 정수기 옆에 컵 놓기'],
+    defaults: { when: '목이 마를 때마다', where: '식탁 위 내 물컵 자리에서', how: '정수기나 수돗물로 바로 마시기' },
+    recommendedNames: ['내 물컵 보물자리 작전', '식탁 위 방울이 컵 작전', '바로 찾는 물컵 작전'],
+  },
+  {
+    id: 'home_tv',
+    place: '집',
+    title: 'TV 보다 잊어요',
+    emoji: '📺',
+    solutions: ['TV 옆 탁자에 물컵 미리 두기', '광고 나올 때마다 물 한 모금 마시기'],
+    defaults: { when: 'TV 광고가 나올 때마다', where: '거실 탁자 앞에서', how: '미리 둔 내 물컵으로 한 모금 마시기' },
+    recommendedNames: ['TV 탐정 물컵 작전', '광고 타임 물 한 모금 작전', '거실 물병 수호대'],
+  },
+];
+
+const STAGES_META = [
+  { id: 1, title: '운동장 땀방울 대작전', short: '운동장', emoji: '⚽' },
+  { id: 2, title: '둘이 함께 물탱크 채우기', short: '물탱크', emoji: '🚰' },
+  { id: 3, title: '우리 집 냉장고 유혹 탈출', short: '냉장고', emoji: '🧊' },
+  { id: 4, title: '나만의 물 마시기 작전 짜기', short: '작전 짜기', emoji: '🗺️' },
+  { id: 5, title: '복습 퀴즈 & 방울이 화분', short: '화분 퀴즈', emoji: '🌱' },
+];
+
+const REVIEW_QUIZ_ITEMS = [
+  {
+    id: 'q1',
+    badge: '복습 1 · 운동장',
+    question: '운동장에서 땀을 많이 흘렸을 때, 몸에 가장 먼저 필요한 것은?',
+    options: [
+      { id: 'a', label: '💧 시원한 물', isCorrect: true, feedback: '정답! 땀으로 나간 물을 채워 줘서 화분이 쑥 자랐어! 💧' },
+      { id: 'b', label: '🥤 달콤한 탄산음료', isCorrect: false, feedback: '탄산도 시원하지만, 목이 마를 땐 몸에 뭐가 제일 필요했지? 다시 골라 보자! 🌱' },
+      { id: 'c', label: '🧃 과일주스', isCorrect: false, feedback: '주스도 맛있지! 그런데 땀을 많이 흘렸을 땐 어떤 게 갈증을 제일 잘 풀어 줬지? 🌱' },
+    ],
+  },
+  {
+    id: 'q2',
+    badge: '복습 2 · 냉장고',
+    question: '집 냉장고 앞에서 물과 우유의 역할을 바르게 말한 것은?',
+    options: [
+      { id: 'a', label: '🥛 목마를 땐 물, 우유는 간식 친구!', isCorrect: true, feedback: '딱 맞았어! 우유는 든든한 간식 친구, 목마를 땐 물 먼저야! 🌼' },
+      { id: 'b', label: '🚫 우유는 절대 마시면 안 돼요', isCorrect: false, feedback: '우유도 멋진 간식 친구야! 목이 마를 때와 간식 시간을 어떻게 나눴지? 🌱' },
+      { id: 'c', label: '🥤 주스에는 물이 하나도 없어요', isCorrect: false, feedback: '주스에도 물은 있지만 설탕이 많아! 물과 우유의 역할을 다시 찾아볼까? 🌱' },
+    ],
+  },
+  {
+    id: 'q3',
+    badge: '복습 3 · 물 마시기 작전',
+    question: '학교나 집에서 물을 마실 때, 어떤 물을 마시면 좋을까요?',
+    options: [
+      { id: 'a', label: '✨ 정수기·수돗물·내 물병 모두 OK!', isCorrect: true, feedback: '완벽해! 어디서든 편하게 물을 마시면 화분에 물방울 꽃이 활짝 피어! 🌸' },
+      { id: 'b', label: '🏪 꼭 가게에서 산 음료만 마셔요', isCorrect: false, feedback: '정수기나 수돗물, 물병 모두 좋다고 배웠지! 다시 골라 볼까? 🌱' },
+      { id: 'c', label: '📺 TV 다 보고 내일 마실래요', isCorrect: false, feedback: '목이 마를 때 바로 한 모금 마시는 작전을 떠올려 보자! 🌱' },
+    ],
+  },
+];
+
+const createInitialPlayers = () => ({
+  seeun: {
+    id: 'seeun',
+    name: '서세은',
+    shortName: '세은',
+    gender: '여',
+    theme: 'blue',
+    waterGauge: 0,
+    gaugeDelta: 0,
+    stickers: [false, false, false],
+    bangul: {
+      expression: '웃음',
+      reply: '세은아, 반가워! 오늘 물 게이지를 0%에서 100%까지 채워 보자! 💧',
+      valid_reason: false,
+      misconception: '없음',
+    },
+    stage1: {
+      drink: null,
+      reason: '',
+      history: [],
+      followUpNeeded: false,
+      validReason: false,
+      misconception: '없음',
+      waterBoosted: false,
+      completed: false,
+    },
+    stage2: { reasons: [], learned: '' },
+    stage3: {
+      drink: null,
+      reason: '',
+      history: [],
+      followUpNeeded: false,
+      validReason: false,
+      misconception: '없음',
+      waterBoosted: false,
+      completed: false,
+    },
+    stage4: {
+      situationId: null,
+      solution: '',
+      when: '',
+      where: '',
+      how: '',
+      strategyName: '',
+      cardFlipped: false,
+      completed: false,
+    },
+    stage5: {
+      drink: 'water',
+      reason: '',
+      validReason: false,
+      misconception: '없음',
+      solvedQuizzes: [],
+      plantStage: 0,
+      completed: false,
+    },
+  },
+  sehyun: {
+    id: 'sehyun',
+    name: '이세현',
+    shortName: '세현',
+    gender: '남',
+    theme: 'orange',
+    waterGauge: 0,
+    gaugeDelta: 0,
+    stickers: [false, false, false],
+    bangul: {
+      expression: '웃음',
+      reply: '세현아, 안녕! 방울이랑 0%에서 100%까지 물 모험 떠나자! ✨',
+      valid_reason: false,
+      misconception: '없음',
+    },
+    stage1: {
+      drink: null,
+      reason: '',
+      history: [],
+      followUpNeeded: false,
+      validReason: false,
+      misconception: '없음',
+      waterBoosted: false,
+      completed: false,
+    },
+    stage2: { reasons: [], learned: '' },
+    stage3: {
+      drink: null,
+      reason: '',
+      history: [],
+      followUpNeeded: false,
+      validReason: false,
+      misconception: '없음',
+      waterBoosted: false,
+      completed: false,
+    },
+    stage4: {
+      situationId: null,
+      solution: '',
+      when: '',
+      where: '',
+      how: '',
+      strategyName: '',
+      cardFlipped: false,
+      completed: false,
+    },
+    stage5: {
+      drink: 'water',
+      reason: '',
+      validReason: false,
+      misconception: '없음',
+      solvedQuizzes: [],
+      plantStage: 0,
+      completed: false,
+    },
+  },
+});
+
+/* ============================================================================
+ * Web Audio Game Sound Engine: Cheerful Game BGM + Crisp SFX (Default OFF)
+ * ============================================================================ */
+function useGameAudio() {
+  const [sfxEnabled, setSfxEnabled] = useState(false);
+  const [bgmEnabled, setBgmEnabled] = useState(false);
+  const ctxRef = useRef(null);
+  const bgmIntervalRef = useRef(null);
+  const stepRef = useRef(0);
+
+  const getCtx = useCallback(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      if (!ctxRef.current) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) ctxRef.current = new AudioCtx();
+      }
+      if (ctxRef.current && ctxRef.current.state === 'suspended') {
+        ctxRef.current.resume().catch(() => {});
+      }
+      return ctxRef.current;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  // Gentle, bouncy Nintendo-style pentatonic marimba + bass BGM loop
+  useEffect(() => {
+    if (bgmIntervalRef.current) {
+      clearInterval(bgmIntervalRef.current);
+      bgmIntervalRef.current = null;
+    }
+    if (!bgmEnabled) return;
+
+    // 16-step bright C-major / F-major / G-major playful melody
+    const melody = [
+      523.25, 659.25, 783.99, 659.25,
+      880.0, 783.99, 659.25, 587.33,
+      523.25, 587.33, 659.25, 783.99,
+      880.0, 1046.5, 783.99, 0,
+    ];
+    const bass = [
+      261.63, 0, 196.0, 0,
+      349.23, 0, 261.63, 0,
+      261.63, 0, 220.0, 0,
+      293.66, 0, 196.0, 0,
+    ];
+
+    const playStep = () => {
+      const ctx = getCtx();
+      if (!ctx) return;
+      try {
+        const idx = stepRef.current % melody.length;
+        stepRef.current += 1;
+        const now = ctx.currentTime;
+
+        const mFreq = melody[idx];
+        if (mFreq > 0) {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(mFreq, now);
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.linearRampToValueAtTime(0.045, now + 0.015);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.26);
+        }
+
+        const bFreq = bass[idx];
+        if (bFreq > 0) {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(bFreq, now);
+          gain.gain.setValueAtTime(0.032, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.34);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.36);
+        }
+      } catch {
+        // Ignore audio errors safely
+      }
+    };
+
+    playStep();
+    bgmIntervalRef.current = setInterval(playStep, 285);
+
+    return () => {
+      if (bgmIntervalRef.current) {
+        clearInterval(bgmIntervalRef.current);
+        bgmIntervalRef.current = null;
+      }
+    };
+  }, [bgmEnabled, getCtx]);
+
+  const playSfx = useCallback(
+    (type) => {
+      if (!sfxEnabled) return;
+      const ctx = getCtx();
+      if (!ctx) return;
+      try {
+        const now = ctx.currentTime;
+        const tone = (freq, start, dur, wave = 'sine', gainVal = 0.12) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = wave;
+          osc.frequency.setValueAtTime(freq, start);
+          gain.gain.setValueAtTime(gainVal, start);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + dur);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start + dur);
+        };
+
+        if (type === 'pop') {
+          tone(520, now, 0.08, 'triangle', 0.13);
+          tone(740, now + 0.04, 0.08, 'sine', 0.1);
+        } else if (type === 'splash') {
+          tone(380, now, 0.1, 'sine', 0.12);
+          tone(560, now + 0.07, 0.12, 'sine', 0.12);
+          tone(820, now + 0.14, 0.18, 'triangle', 0.11);
+        } else if (type === 'sticker') {
+          [523.25, 659.25, 783.99, 1046.5].forEach((f, i) =>
+            tone(f, now + i * 0.08, 0.22, 'triangle', 0.13)
+          );
+        } else if (type === 'firework') {
+          [440, 554.37, 659.25, 880, 1108.73].forEach((f, i) =>
+            tone(f, now + i * 0.07, 0.28, 'sine', 0.14)
+          );
+        } else if (type === 'hop') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(680, now + 0.18);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        } else if (type === 'flip') {
+          tone(420, now, 0.09, 'sine', 0.1);
+          tone(700, now + 0.07, 0.15, 'triangle', 0.12);
+        }
+      } catch {
+        // Ignore audio errors safely
+      }
+    },
+    [sfxEnabled, getCtx]
+  );
+
+  return { sfxEnabled, setSfxEnabled, bgmEnabled, setBgmEnabled, playSfx };
+}
+
+/* ============================================================================
+ * Bangul Evaluator (Gemini API with 2s timeout + Pre-written Safe Fallback)
+ * ============================================================================ */
+function evaluateLocally({ playerShortName, drinkId, reasonText, stage }) {
+  const nameCall = `${playerShortName}아`;
+  const text = (reasonText || '').trim();
+  const drink = DRINKS.find((d) => d.id === drinkId);
+
+  if (text.includes('물이 없') || text.includes('물 안 들') || text.includes('물이 안')) {
+    return {
+      valid_reason: true,
+      misconception: '다른 음료에 물이 전혀 없다고 생각함',
+      expression: '놀람',
+      reply: `${nameCall}, 다른 음료에도 물은 있어! 하지만 설탕이 많아서 목마를 땐 물이 최고야 💧`,
+    };
+  }
+
+  if (
+    text.includes('선생님') ||
+    text.includes('시켜서') ||
+    text.includes('엄마가') ||
+    text.includes('그냥요')
+  ) {
+    return {
+      valid_reason: false,
+      misconception: '없음',
+      expression: '갸웃',
+      reply: `${nameCall}, 그렇게 생각해 줬구나! 그런데 우리 몸에 물이 왜 필요했지? 🤔`,
+    };
+  }
+
+  if (drinkId === 'milk') {
+    if (
+      text.includes('간식') ||
+      text.includes('물 먼저') ||
+      text.includes('물도') ||
+      text.includes('몸에 필요')
+    ) {
+      return {
+        valid_reason: true,
+        misconception: '없음',
+        expression: '웃음',
+        reply: `${nameCall}, 딱 맞았어! 목마를 땐 물, 우유는 든든한 간식 친구야 🥛`,
+      };
+    }
+    return {
+      valid_reason: false,
+      misconception: '없음',
+      expression: '갸웃',
+      reply: `${nameCall}, 우유도 멋진 간식 친구야! 목이 마를 땐 물이 먼저 필요하지 않을까? 💧`,
+    };
+  }
+
+  if (
+    drinkId !== 'water' &&
+    (text.includes('맛있') || text.includes('달아') || text.includes('좋아해') || text.length < 4)
+  ) {
+    return {
+      valid_reason: false,
+      misconception: '없음',
+      expression: '갸웃',
+      reply: `${nameCall}, ${drink ? drink.name : '그 음료'} 맛있지! 그런데 목이 마를 땐 몸이 뭐가 필요할까? 💧`,
+    };
+  }
+
+  if (
+    drinkId !== 'water' &&
+    (text.includes('물') || text.includes('몸') || text.includes('수분') || text.includes('갈증') || text.includes('땀'))
+  ) {
+    return {
+      valid_reason: true,
+      misconception: '없음',
+      expression: '응원',
+      reply:
+        stage === 3
+          ? `${nameCall}, 잘 연결했어! 집에서도 목마를 땐 물 먼저 마셔 보자! ✨`
+          : `${nameCall}, 멋지게 떠올렸어! 목마를 땐 몸에 필요한 물 먼저 마시자! 🌟`,
+    };
+  }
+
+  if (
+    drinkId === 'water' &&
+    (text.includes('땀') ||
+      text.includes('채워') ||
+      text.includes('몸') ||
+      text.includes('필요') ||
+      text.includes('갈증') ||
+      text.includes('설탕') ||
+      text.includes('시원') ||
+      text.includes('수분') ||
+      text.includes('물') ||
+      text.includes('먼저') ||
+      text.length >= 6)
+  ) {
+    return {
+      valid_reason: true,
+      misconception: '없음',
+      expression: '웃음',
+      reply:
+        stage === 3
+          ? `${nameCall}, 대단해! 집에서도 목마를 땐 물 먼저 고른 이유가 정말 멋져! 💧`
+          : `${nameCall}, 정말 멋진 이유야! 땀으로 나간 물을 꼭 채워 줘야 해! ✨`,
+    };
+  }
+
+  return {
+    valid_reason: false,
+    misconception: '없음',
+    expression: '갸웃',
+    reply: `${nameCall}, 좋은 생각이야! 목이 마를 때 우리 몸에 물이 왜 필요한지 말해 줄래? 💧`,
+  };
+}
+
+async function askBangulAI({ apiKey, playerShortName, drinkId, reasonText, stage }) {
+  const fallback = evaluateLocally({ playerShortName, drinkId, reasonText, stage });
+  if (!apiKey || !apiKey.trim()) return fallback;
+
+  const drink = DRINKS.find((d) => d.id === drinkId);
+  const userPrompt = `학생 이름: ${playerShortName}, 스테이지: ${stage}, 선택한 음료: ${drink ? drink.name : '없음'}, 학생이 말한 이유: "${reasonText}". JSON으로만 답해줘.`;
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 1900);
+
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(
+        apiKey.trim()
+      )}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: BANGUL_SYSTEM_INSTRUCTION }] },
+          contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+          generationConfig: {
+            responseMimeType: 'application/json',
+            temperature: 0.4,
+            maxOutputTokens: 180,
+          },
+        }),
+      }
+    );
+    clearTimeout(timer);
+    if (!res.ok) return fallback;
+    const data = await res.json();
+    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!rawText) return fallback;
+    const parsed = JSON.parse(rawText);
+    if (typeof parsed.reply === 'string' && parsed.reply.trim()) {
+      return {
+        valid_reason: Boolean(parsed.valid_reason),
+        misconception: parsed.misconception || '없음',
+        expression: ['웃음', '갸웃', '놀람', '응원'].includes(parsed.expression)
+          ? parsed.expression
+          : fallback.expression,
+        reply: parsed.reply.slice(0, 80),
+      };
+    }
+    return fallback;
+  } catch {
+    clearTimeout(timer);
+    return fallback;
+  }
+}
+
+/* ============================================================================
+ * Original Cartoon SVG Characters: Bangul, Seo Se-eun (Blue), Lee Se-hyun (Orange)
+ * ============================================================================ */
+function BangulAvatar({ expression = '웃음', size = 80, dancing = false, waiting = false }) {
+  const animClass = dancing ? 'bangul-dance' : waiting ? 'bangul-wait' : 'bangul-float';
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 120 120"
+      className={`${animClass} select-none shrink-0`}
+      aria-label={`방울이 ${expression}`}
+    >
+      <defs>
+        <radialGradient id="bangulGrad" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#E0F7FF" />
+          <stop offset="55%" stopColor="#56CCF2" />
+          <stop offset="100%" stopColor="#0284C7" />
+        </radialGradient>
+      </defs>
+      <path
+        d="M60 10 C60 10 102 52 102 78 C102 101 83 112 60 112 C37 112 18 101 18 78 C18 52 60 10 60 10 Z"
+        fill="url(#bangulGrad)"
+        stroke="#1E293B"
+        strokeWidth="4"
+        strokeLinejoin="round"
+      />
+      <ellipse cx="42" cy="54" rx="8" ry="14" transform="rotate(-20 42 54)" fill="#FFFFFF" opacity="0.72" />
+      <circle cx="37" cy="72" r="3.5" fill="#FFFFFF" opacity="0.78" />
+      <ellipse cx="36" cy="82" rx="7" ry="4.5" fill="#FDA4AF" opacity="0.75" />
+      <ellipse cx="84" cy="82" rx="7" ry="4.5" fill="#FDA4AF" opacity="0.75" />
+
+      {expression === '웃음' && (
+        <>
+          <path d="M38 71 Q45 63 52 71" fill="none" stroke="#1E293B" strokeWidth="4" strokeLinecap="round" />
+          <path d="M68 71 Q75 63 82 71" fill="none" stroke="#1E293B" strokeWidth="4" strokeLinecap="round" />
+          <path d="M48 82 Q60 95 72 82" fill="#FB7185" stroke="#1E293B" strokeWidth="3.5" strokeLinecap="round" />
+        </>
+      )}
+      {expression === '갸웃' && (
+        <>
+          <circle cx="45" cy="71" r="5" fill="#1E293B" />
+          <circle cx="43.5" cy="69" r="1.8" fill="#FFF" />
+          <circle cx="75" cy="68" r="5" fill="#1E293B" />
+          <circle cx="73.5" cy="66" r="1.8" fill="#FFF" />
+          <path d="M53 85 Q60 81 67 85" fill="none" stroke="#1E293B" strokeWidth="3.5" strokeLinecap="round" />
+          <text x="90" y="34" fontSize="22" fontWeight="900" fill="#F59E0B">?</text>
+        </>
+      )}
+      {expression === '놀람' && (
+        <>
+          <circle cx="45" cy="70" r="6" fill="#1E293B" />
+          <circle cx="43" cy="68" r="2.2" fill="#FFF" />
+          <circle cx="75" cy="70" r="6" fill="#1E293B" />
+          <circle cx="73" cy="68" r="2.2" fill="#FFF" />
+          <ellipse cx="60" cy="86" rx="6" ry="7.5" fill="#FB7185" stroke="#1E293B" strokeWidth="3.5" />
+          <text x="89" y="34" fontSize="22" fontWeight="900" fill="#EF4444">!</text>
+        </>
+      )}
+      {expression === '응원' && (
+        <>
+          <circle cx="45" cy="70" r="5.5" fill="#1E293B" />
+          <circle cx="43" cy="68" r="2" fill="#FFF" />
+          <circle cx="75" cy="70" r="5.5" fill="#1E293B" />
+          <circle cx="73" cy="68" r="2" fill="#FFF" />
+          <path d="M46 81 Q60 94 74 81" fill="#FDE047" stroke="#1E293B" strokeWidth="3.5" strokeLinecap="round" />
+          <path d="M96 24 L100 32 L108 33 L102 39 L104 47 L96 43 L88 47 L90 39 L84 33 L92 32 Z" fill="#FACC15" stroke="#1E293B" strokeWidth="2" />
+        </>
+      )}
+    </svg>
+  );
+}
+
+function ChildAvatar({ theme = 'blue', gender = '여', size = 66 }) {
+  const hatFill = theme === 'blue' ? '#38BDF8' : '#FB923C';
+  const hatLight = theme === 'blue' ? '#BAE6FD' : '#FED7AA';
+  const shirtFill = theme === 'blue' ? '#0284C7' : '#EA580C';
+  return (
+    <svg width={size} height={size} viewBox="0 0 110 110" className="select-none shrink-0">
+      <path d="M24 104 C24 85 86 85 86 104 Z" fill={shirtFill} stroke="#1E293B" strokeWidth="3.5" />
+      {gender === '여' && (
+        <>
+          <circle cx="28" cy="68" r="13" fill="#451A03" stroke="#1E293B" strokeWidth="3" />
+          <circle cx="82" cy="68" r="13" fill="#451A03" stroke="#1E293B" strokeWidth="3" />
+        </>
+      )}
+      <circle cx="55" cy="66" r="26" fill="#FDE6C4" stroke="#1E293B" strokeWidth="3.5" />
+      <path
+        d={
+          gender === '여'
+            ? 'M31 58 Q45 45 55 56 Q65 45 79 58 Q74 41 55 41 Q36 41 31 58 Z'
+            : 'M31 58 L41 49 L49 56 L58 47 L67 56 L79 56 Q74 41 55 41 Q36 41 31 58 Z'
+        }
+        fill="#451A03"
+        stroke="#1E293B"
+        strokeWidth="2.8"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M55 6 C55 6 84 29 84 44 C84 52 74 52 55 52 C36 52 26 52 26 44 C26 29 55 6 55 6 Z"
+        fill={hatFill}
+        stroke="#1E293B"
+        strokeWidth="3.5"
+        strokeLinejoin="round"
+      />
+      <ellipse cx="47" cy="31" rx="5" ry="9" transform="rotate(-18 47 31)" fill={hatLight} />
+      <circle cx="45" cy="68" r="3.6" fill="#1E293B" />
+      <circle cx="65" cy="68" r="3.6" fill="#1E293B" />
+      <circle cx="43.8" cy="66.8" r="1.3" fill="#FFF" />
+      <circle cx="63.8" cy="66.8" r="1.3" fill="#FFF" />
+      <ellipse cx="37" cy="75" rx="4.5" ry="2.8" fill="#FDA4AF" />
+      <ellipse cx="73" cy="75" rx="4.5" ry="2.8" fill="#FDA4AF" />
+      <path d="M47 77 Q55 85 63 77" fill="none" stroke="#1E293B" strokeWidth="3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/* ============================================================================
+ * Celebratory Confetti & Fireworks Overlay (<= 1.5s, click to skip)
+ * ============================================================================ */
+function CelebrationBurst({ active, kind = 'confetti', onSkip }) {
+  if (!active) return null;
+  const colors = ['#38BDF8', '#FACC15', '#34D399', '#FB7185', '#A78BFA', '#FB923C'];
+  const pieces = Array.from({ length: 24 }, (_, i) => ({
+    id: i,
+    left: `${8 + ((i * 37) % 84)}%`,
+    top: kind === 'fireworks' ? `${15 + ((i * 23) % 45)}%` : '-5%',
+    color: colors[i % colors.length],
+    delay: `${(i % 6) * 0.08}s`,
+    size: 10 + (i % 3) * 5,
+  }));
+
+  return (
+    <div
+      onClick={onSkip}
+      className="fixed inset-0 z-40 pointer-events-auto cursor-pointer overflow-hidden"
+      title="화면을 탭하면 연출을 건너뜁니다"
+    >
+      {pieces.map((p) => (
+        <div
+          key={p.id}
+          className={kind === 'fireworks' ? 'firework-dot' : 'confetti-piece'}
+          style={{
+            left: p.left,
+            top: p.top,
+            width: p.size,
+            height: p.size,
+            backgroundColor: p.color,
+            animationDelay: p.delay,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ============================================================================
+ * Clean, Breathable Left / Right Player Panel (0% -> 100% Fun Water Gauge)
+ * ============================================================================ */
+function PlayerPanel({ player, isActive, onSelect }) {
+  const isBlue = player.theme === 'blue';
+  const isFull = player.waterGauge >= 100;
+
+  const activeRing = isActive
+    ? isBlue
+      ? 'border-sky-500 ring-4 ring-sky-200 shadow-xl'
+      : 'border-orange-500 ring-4 ring-orange-200 shadow-xl'
+    : 'border-slate-200 shadow-md opacity-95 hover:opacity-100';
+
+  const headerBg = isBlue ? 'bg-sky-50 border-sky-200' : 'bg-orange-50 border-orange-200';
+  const gaugeFill = isFull
+    ? 'from-emerald-400 via-teal-400 to-sky-400'
+    : isBlue
+    ? 'from-sky-400 to-cyan-300'
+    : 'from-amber-400 to-orange-400';
+
+  const stickerMeta = [
+    { label: '이유 말하기', emoji: '💧' },
+    { label: '집에서 물', emoji: '🏠' },
+    { label: '나만의 작전', emoji: '🌟' },
+  ];
+
+  return (
+    <aside
+      onClick={onSelect}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') onSelect();
+      }}
+      className={`w-[220px] xl:w-[268px] shrink-0 h-full bg-white/95 rounded-[26px] border-[3px] ${activeRing} p-3 xl:p-4 flex flex-col justify-between transition-all duration-200 cursor-pointer select-none relative`}
+    >
+      {isActive && (
+        <div
+          className={`absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-xs xl:text-sm font-black text-white shadow-sm whitespace-nowrap ${
+            isBlue ? 'bg-sky-500' : 'bg-orange-500'
+          }`}
+        >
+          지금 입력 중
+        </div>
+      )}
+
+      {/* Player Header */}
+      <div className={`rounded-2xl border-2 ${headerBg} p-2.5 flex items-center gap-2.5`}>
+        <ChildAvatar theme={player.theme} gender={player.gender} size={58} />
+        <div className="min-w-0">
+          <div className="text-[20px] xl:text-[26px] font-black text-slate-900 leading-tight truncate">
+            {player.name}
+          </div>
+          <div className="text-xs font-bold text-slate-500 mt-0.5">
+            물방울 대원 ({player.gender})
+          </div>
+        </div>
+      </div>
+
+      {/* Progressive Water Gauge: 0% -> 100% */}
+      <div className="bg-slate-50 rounded-2xl border-2 border-slate-200/90 p-2.5 relative">
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="text-xs xl:text-sm font-black text-slate-700 flex items-center gap-1">
+            <Droplets className="w-4 h-4 text-sky-500" /> 몸속 물 게이지
+          </span>
+          <div className="flex items-center gap-1">
+            {player.gaugeDelta > 0 && (
+              <span className="text-xs font-black text-emerald-600 animate-bounce">
+                +{player.gaugeDelta}%
+              </span>
+            )}
+            <span
+              className={`text-base xl:text-xl font-black ${
+                isFull ? 'text-emerald-600' : isBlue ? 'text-sky-600' : 'text-orange-600'
+              }`}
+            >
+              {player.waterGauge}%
+            </span>
+          </div>
+        </div>
+
+        {/* Gauge Bar with 25/50/75 tick marks */}
+        <div className="h-7 xl:h-8 w-full bg-white rounded-full border-2 border-slate-300 overflow-hidden relative shadow-inner">
+          <div
+            className={`h-full bg-gradient-to-r ${gaugeFill} transition-all duration-700 ease-out relative rounded-full`}
+            style={{ width: `${Math.max(0, Math.min(100, player.waterGauge))}%` }}
+          >
+            {player.waterGauge > 0 && (
+              <div className="absolute inset-0 bg-white/30 animate-pulse" />
+            )}
+          </div>
+          {/* Subtle milestone ticks */}
+          <div className="pointer-events-none absolute inset-0 flex justify-evenly items-center">
+            <span className="w-px h-3 bg-slate-300/80" />
+            <span className="w-px h-3 bg-slate-300/80" />
+            <span className="w-px h-3 bg-slate-300/80" />
+          </div>
+        </div>
+
+        <div className="mt-1 flex justify-between text-[10px] xl:text-[11px] font-bold text-slate-400">
+          <span>0%</span>
+          <span className={isFull ? 'text-emerald-600 font-black' : ''}>
+            {isFull ? '100% 가득 채웠어요! 🎉' : '100%를 향해 채워요!'}
+          </span>
+          <span>100%</span>
+        </div>
+      </div>
+
+      {/* 3 Sticker Slots */}
+      <div>
+        <div className="text-xs xl:text-sm font-black text-slate-600 mb-1.5 flex items-center gap-1">
+          <Award className="w-4 h-4 text-amber-500" /> 스티커 (3칸)
+        </div>
+        <div className="grid grid-cols-3 gap-1.5">
+          {stickerMeta.map((slot, idx) => {
+            const earned = player.stickers[idx];
+            return (
+              <div
+                key={slot.label}
+                className={`rounded-xl border-2 py-1.5 px-1 flex flex-col items-center justify-center text-center transition-all ${
+                  earned
+                    ? 'bg-amber-100 border-amber-400 sticker-pop shadow-sm'
+                    : 'bg-slate-50 border-dashed border-slate-300 text-slate-400'
+                }`}
+              >
+                <span className={`text-xl xl:text-2xl ${earned ? '' : 'grayscale opacity-30'}`}>
+                  {slot.emoji}
+                </span>
+                <span className="text-[10px] xl:text-[11px] font-extrabold leading-tight mt-0.5 text-slate-700">
+                  {slot.label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Mini Bangul Reaction */}
+      <div className="bg-sky-50/70 rounded-2xl border-2 border-sky-100 p-2.5 flex items-center gap-2 min-h-[78px]">
+        <BangulAvatar expression={player.bangul.expression} size={42} />
+        <p className="text-xs xl:text-sm font-bold text-slate-700 leading-snug line-clamp-3">
+          {player.bangul.reply}
+        </p>
+      </div>
+    </aside>
+  );
+}
+
+/* ============================================================================
+ * Clean RPG Bottom Dialogue Box (Typewriter + Tap to Reveal)
+ * ============================================================================ */
+function RpgDialogueBox({ expression, text, waiting }) {
+  const [visibleLen, setVisibleLen] = useState(0);
+
+  useEffect(() => {
+    setVisibleLen(0);
+    if (!text) return;
+    const stepMs = Math.max(12, Math.min(26, Math.floor(1050 / Math.max(1, text.length))));
+    const id = setInterval(() => {
+      setVisibleLen((prev) => {
+        if (prev >= text.length) {
+          clearInterval(id);
+          return text.length;
+        }
+        return prev + 1;
+      });
+    }, stepMs);
+    return () => clearInterval(id);
+  }, [text]);
+
+  return (
+    <div
+      onClick={() => text && setVisibleLen(text.length)}
+      className="mt-2.5 bg-white/95 rounded-[24px] border-[3px] border-sky-300 shadow-md px-4 py-2.5 xl:px-5 xl:py-3 flex items-center gap-3.5 cursor-pointer select-none shrink-0"
+      title="탭하면 전체 문장이 바로 나타납니다"
+    >
+      <BangulAvatar expression={expression} size={64} waiting={waiting} />
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-0.5">
+          <span className="px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 text-xs xl:text-sm font-black">
+            방울이
+          </span>
+          {waiting && (
+            <span className="text-xs xl:text-sm font-extrabold text-amber-600 animate-pulse">
+              음~ 뭐라고 했을까?
+            </span>
+          )}
+        </div>
+        <p className="text-[19px] xl:text-[28px] font-black text-slate-800 leading-snug">
+          {text ? text.slice(0, visibleLen) : '음~ 뭐라고 했을까?'}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================================
+ * Teacher Dashboard Modal ([교사] 버튼)
+ * ============================================================================ */
+function TeacherModal({ players, onClose }) {
+  const list = [players.seeun, players.sehyun];
+
+  const checkObj1 = (p) => {
+    const waterCount =
+      (p.stage1.drink === 'water' ? 1 : 0) +
+      (p.stage3.drink === 'water' ? 1 : 0) +
+      (p.stage5.drink === 'water' ? 1 : 0);
+    const hasReason = p.stage1.validReason || p.stage3.validReason || p.stage5.validReason;
+    return waterCount >= 2 && hasReason;
+  };
+
+  const checkObj2 = (p) =>
+    Boolean(
+      p.stage4.situationId &&
+        p.stage4.solution &&
+        p.stage4.when.trim() &&
+        p.stage4.where.trim() &&
+        p.stage4.how.trim()
+    );
+
+  const getMisconceptions = (p) =>
+    [p.stage1.misconception, p.stage3.misconception, p.stage5.misconception].filter(
+      (m) => m && m !== '없음'
+    );
+
+  return (
+    <div className="fixed inset-0 z-50 bg-slate-900/55 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-white w-full max-w-5xl max-h-[90vh] rounded-[28px] border-[3px] border-slate-300 shadow-2xl flex flex-col overflow-hidden">
+        <div className="bg-sky-50 border-b-2 border-slate-200 px-6 py-4 flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-black text-slate-900 flex items-center gap-2">
+              <ClipboardCheck className="w-7 h-7 text-sky-600" /> 교사 확인 화면 — 서로 다른 선택과 이유
+            </h2>
+            <p className="text-sm font-bold text-slate-500 mt-0.5">
+              두 학습자의 선택과 실천 계획을 나란히 확인합니다. (순위·비교 없음)
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-10 h-10 rounded-xl bg-white border-2 border-slate-300 flex items-center justify-center hover:bg-slate-100"
+            aria-label="교사 화면 닫기"
+          >
+            <X className="w-5 h-5 text-slate-700" />
+          </button>
+        </div>
+
+        <div className="p-5 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-5">
+          {list.map((p) => {
+            const obj1 = checkObj1(p);
+            const obj2 = checkObj2(p);
+            const misconceptions = getMisconceptions(p);
+            const sit = DIFFICULT_SITUATIONS.find((s) => s.id === p.stage4.situationId);
+            const drinkName = (id) => DRINKS.find((d) => d.id === id)?.name || '미선택';
+
+            return (
+              <div
+                key={p.id}
+                className={`rounded-3xl border-2 p-4 ${
+                  p.theme === 'blue' ? 'bg-sky-50/70 border-sky-200' : 'bg-orange-50/70 border-orange-200'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-200">
+                  <div className="flex items-center gap-2.5">
+                    <ChildAvatar theme={p.theme} gender={p.gender} size={50} />
+                    <div>
+                      <div className="text-xl font-black text-slate-900">{p.name}</div>
+                      <div className="text-xs font-bold text-slate-500">서로 다른 선택과 이유 기록</div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1 items-end">
+                    <span
+                      className={`px-2.5 py-0.5 rounded-full text-xs font-black ${
+                        obj1 ? 'bg-emerald-200 text-emerald-900' : 'bg-slate-200 text-slate-600'
+                      }`}
+                    >
+                      목표 1: {obj1 ? '충족 ✓' : '진행 중'}
+                    </span>
+                    <span
+                      className={`px-2.5 py-0.5 rounded-full text-xs font-black ${
+                        obj2 ? 'bg-emerald-200 text-emerald-900' : 'bg-slate-200 text-slate-600'
+                      }`}
+                    >
+                      목표 2: {obj2 ? '충족 ✓' : '진행 중'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-2 text-sm font-bold text-slate-800">
+                  <div className="bg-white rounded-2xl border border-slate-200 p-2.5">
+                    <div className="text-xs font-black text-sky-600">1단계 운동장</div>
+                    <div>선택: {drinkName(p.stage1.drink)} / 이유: {p.stage1.reason || '미입력'}</div>
+                  </div>
+                  <div className="bg-white rounded-2xl border border-slate-200 p-2.5">
+                    <div className="text-xs font-black text-sky-600">3단계 냉장고</div>
+                    <div>선택: {drinkName(p.stage3.drink)} / 이유: {p.stage3.reason || '미입력'}</div>
+                  </div>
+                  <div className="bg-white rounded-2xl border border-slate-200 p-2.5">
+                    <div className="text-xs font-black text-emerald-600">4단계 나만의 작전 카드</div>
+                    <div>작전명: <span className="font-black">{p.stage4.strategyName || '미완성'}</span></div>
+                    <div>어려운 상황: {sit ? `${sit.place} - ${sit.title}` : '미선택'}</div>
+                    <div>해결 방법: {p.stage4.solution || '미선택'}</div>
+                    <div>실천: {p.stage4.when || '-'} / {p.stage4.where || '-'} / {p.stage4.how || '-'}</div>
+                  </div>
+                  <div className="bg-white rounded-2xl border border-slate-200 p-2.5">
+                    <div className="text-xs font-black text-violet-600">5단계 복습 퀴즈 & 방울이 화분</div>
+                    <div>복습 완료: {p.stage5.solvedQuizzes.length} / 3문제 · 화분 성장: {p.stage5.plantStage}단계</div>
+                  </div>
+                  <div
+                    className={`rounded-2xl border p-2.5 flex items-start gap-2 ${
+                      misconceptions.length > 0 ? 'bg-amber-100 border-amber-300' : 'bg-white border-slate-200'
+                    }`}
+                  >
+                    <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="text-xs font-black text-amber-800">오개념 알림</div>
+                      <div>{misconceptions.length > 0 ? misconceptions.join(', ') : '특이 오개념 없음'}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="bg-amber-50 border-t-2 border-slate-200 px-6 py-3 flex items-center justify-between">
+          <p className="text-base font-black text-slate-800">
+            ※ 자동 표시는 참고용이며, <span className="text-amber-700 underline decoration-2">최종 판단은 교사가</span> 합니다.
+          </p>
+          <button
+            onClick={onClose}
+            className="px-5 py-2 rounded-xl bg-sky-500 text-white font-black shadow-sm hover:bg-sky-600"
+          >
+            게임으로 돌아가기
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================================
+ * Main App Component
+ * ============================================================================ */
+function App() {
+  const [screen, setScreen] = useState('start');
+  const [completedStages, setCompletedStages] = useState([false, false, false, false, false]);
+  const [activePlayer, setActivePlayer] = useState('seeun');
+  const [players, setPlayers] = useState(createInitialPlayers);
+  const playersRef = useRef(players);
+  useEffect(() => {
+    playersRef.current = players;
+  }, [players]);
+
+  const [dialogue, setDialogue] = useState({
+    expression: '웃음',
+    text: '안녕! 나는 방울이야! 몸속 물 게이지를 0%에서 100%까지 함께 채워 보자! 💧',
+    waiting: false,
+  });
+
+  const [celebration, setCelebration] = useState({ active: false, kind: 'confetti' });
+  const [stage1IntroActive, setStage1IntroActive] = useState(false);
+  const [fridgeOpen, setFridgeOpen] = useState(false);
+
+  const [tankLevel, setTankLevel] = useState(0);
+  const [tankEntries, setTankEntries] = useState([]);
+  const [stage2Timer, setStage2Timer] = useState(30);
+  const [stage2TimerRunning, setStage2TimerRunning] = useState(false);
+  const [stage2Input, setStage2Input] = useState('');
+  const [stage2AskLearned, setStage2AskLearned] = useState(false);
+
+  const [reasonDraft, setReasonDraft] = useState('');
+  const [isListening, setIsListening] = useState(false);
+  const [micNotice, setMicNotice] = useState('');
+  const [blankFieldAlert, setBlankFieldAlert] = useState('');
+  const [stage4Step, setStage4Step] = useState(1);
+  const [stage5Tab, setStage5Tab] = useState('quiz');
+  const [stage5QuizIdx, setStage5QuizIdx] = useState(0);
+  const [stage5Hint, setStage5Hint] = useState('');
+
+  const [lessonSeconds, setLessonSeconds] = useState(600);
+  const [lessonTimerRunning, setLessonTimerRunning] = useState(false);
+  const [showTeacherModal, setShowTeacherModal] = useState(false);
+  const [showApiModal, setShowApiModal] = useState(false);
+  const [geminiApiKey, setGeminiApiKey] = useState('');
+  const [apiKeyDraft, setApiKeyDraft] = useState('');
+
+  const audio = useGameAudio();
+  const recognitionRef = useRef(null);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('bangul_gemini_key');
+      if (saved) {
+        setGeminiApiKey(saved);
+        setApiKeyDraft(saved);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!lessonTimerRunning) return;
+    const id = setInterval(() => {
+      setLessonSeconds((s) => (s > 0 ? s - 1 : 0));
+    }, 1000);
+    return () => clearInterval(id);
+  }, [lessonTimerRunning]);
+
+  useEffect(() => {
+    if (!stage2TimerRunning || screen !== 'stage2') return;
+    const id = setInterval(() => {
+      setStage2Timer((t) => {
+        if (t <= 1) {
+          setStage2TimerRunning(false);
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [stage2TimerRunning, screen]);
+
+  const triggerCelebration = useCallback(
+    (kind = 'confetti') => {
+      setCelebration({ active: true, kind });
+      audio.playSfx(kind === 'fireworks' ? 'firework' : 'sticker');
+      setTimeout(() => {
+        setCelebration((prev) => (prev.active ? { ...prev, active: false } : prev));
+      }, 1400);
+    },
+    [audio]
+  );
+
+  // Helper to show +delta animation briefly on a player's water gauge
+  const clearDeltaLater = useCallback((pid) => {
+    setTimeout(() => {
+      setPlayers((prev) => ({
+        ...prev,
+        [pid]: { ...prev[pid], gaugeDelta: 0 },
+      }));
+    }, 1200);
+  }, []);
+
+  const addWaterGauge = useCallback(
+    (pid, amount) => {
+      if (amount <= 0) return;
+      setPlayers((prev) => {
+        const cur = prev[pid];
+        const nextVal = Math.min(100, cur.waterGauge + amount);
+        const actualDelta = nextVal - cur.waterGauge;
+        return {
+          ...prev,
+          [pid]: {
+            ...cur,
+            waterGauge: nextVal,
+            gaugeDelta: actualDelta,
+          },
+        };
+      });
+      clearDeltaLater(pid);
+    },
+    [clearDeltaLater]
+  );
+
+  const enterStage = useCallback(
+    (stageNum) => {
+      audio.playSfx('hop');
+      setReasonDraft('');
+      setBlankFieldAlert('');
+      setMicNotice('');
+      setActivePlayer('seeun');
+      setScreen(`stage${stageNum}`);
+
+      if (stageNum === 1) {
+        setStage1IntroActive(true);
+        setDialogue({
+          expression: '놀람',
+          text: '운동장에서 신나게 뛰었더니 땀이 뚝뚝! 0%인 물 게이지를 채워 보자! 💦',
+          waiting: false,
+        });
+        setTimeout(() => setStage1IntroActive(false), 1400);
+      } else if (stageNum === 2) {
+        setStage2Timer(30);
+        setStage2TimerRunning(false);
+        setDialogue({
+          expression: '응원',
+          text: '둘이 힘을 합쳐 물탱크를 채우면 우리 물 게이지도 쑥쑥 올라가! 💧',
+          waiting: true,
+        });
+      } else if (stageNum === 3) {
+        setFridgeOpen(false);
+        setTimeout(() => setFridgeOpen(true), 220);
+        setDialogue({
+          expression: '놀람',
+          text: 'TV 보다 목이 말라 냉장고를 열었어! 무엇을 먼저 마실까? 🧊',
+          waiting: true,
+        });
+      } else if (stageNum === 4) {
+        setStage4Step(1);
+        setDialogue({
+          expression: '웃음',
+          text: '1단계! 먼저 물 마시기 어려운 상황 카드를 하나 골라 보자! 🗺️',
+          waiting: true,
+        });
+      } else if (stageNum === 5) {
+        setStage5Tab('quiz');
+        setStage5QuizIdx(0);
+        setStage5Hint('');
+        setDialogue({
+          expression: '응원',
+          text: '오늘 배운 내용을 복습 퀴즈로 맞히고 방울이 화분에 꽃을 피워 보자! 🌱',
+          waiting: true,
+        });
+      }
+    },
+    [audio]
+  );
+
+  const markStageDone = useCallback((stageIdx) => {
+    setCompletedStages((prev) => prev.map((v, i) => (i === stageIdx ? true : v)));
+  }, []);
+
+  const currentStageNum = screen.startsWith('stage') ? Number(screen.replace('stage', '')) : 0;
+
+  const resetCurrentStage = useCallback(() => {
+    if (!currentStageNum) return;
+    audio.playSfx('pop');
+    setReasonDraft('');
+    setBlankFieldAlert('');
+    const fresh = createInitialPlayers();
+    if (currentStageNum === 1) {
+      setPlayers((prev) => ({
+        seeun: {
+          ...prev.seeun,
+          waterGauge: 0,
+          gaugeDelta: 0,
+          stickers: [false, prev.seeun.stickers[1], prev.seeun.stickers[2]],
+          stage1: fresh.seeun.stage1,
+        },
+        sehyun: {
+          ...prev.sehyun,
+          waterGauge: 0,
+          gaugeDelta: 0,
+          stickers: [false, prev.sehyun.stickers[1], prev.sehyun.stickers[2]],
+          stage1: fresh.sehyun.stage1,
+        },
+      }));
+    } else if (currentStageNum === 2) {
+      setTankLevel(0);
+      setTankEntries([]);
+      setStage2Timer(30);
+      setStage2TimerRunning(false);
+      setStage2AskLearned(false);
+      setPlayers((prev) => ({
+        seeun: { ...prev.seeun, stage2: { reasons: [], learned: '' } },
+        sehyun: { ...prev.sehyun, stage2: { reasons: [], learned: '' } },
+      }));
+    } else if (currentStageNum === 3) {
+      setPlayers((prev) => ({
+        seeun: {
+          ...prev.seeun,
+          stickers: [prev.seeun.stickers[0], false, prev.seeun.stickers[2]],
+          stage3: fresh.seeun.stage3,
+        },
+        sehyun: {
+          ...prev.sehyun,
+          stickers: [prev.sehyun.stickers[0], false, prev.sehyun.stickers[2]],
+          stage3: fresh.sehyun.stage3,
+        },
+      }));
+    } else if (currentStageNum === 4) {
+      setPlayers((prev) => ({
+        seeun: {
+          ...prev.seeun,
+          stickers: [prev.seeun.stickers[0], prev.seeun.stickers[1], false],
+          stage4: fresh.seeun.stage4,
+        },
+        sehyun: {
+          ...prev.sehyun,
+          stickers: [prev.sehyun.stickers[0], prev.sehyun.stickers[1], false],
+          stage4: fresh.sehyun.stage4,
+        },
+      }));
+    } else if (currentStageNum === 5) {
+      setStage5Tab('quiz');
+      setStage5QuizIdx(0);
+      setStage5Hint('');
+      setPlayers((prev) => ({
+        seeun: { ...prev.seeun, stage5: fresh.seeun.stage5 },
+        sehyun: { ...prev.sehyun, stage5: fresh.sehyun.stage5 },
+      }));
+    }
+    enterStage(currentStageNum);
+  }, [audio, currentStageNum, enterStage]);
+
+  const resetWholeGame = useCallback(() => {
+    audio.playSfx('pop');
+    setPlayers(createInitialPlayers());
+    setCompletedStages([false, false, false, false, false]);
+    setActivePlayer('seeun');
+    setTankLevel(0);
+    setTankEntries([]);
+    setStage2Timer(30);
+    setStage2TimerRunning(false);
+    setStage2AskLearned(false);
+    setStage4Step(1);
+    setStage5Tab('quiz');
+    setStage5QuizIdx(0);
+    setStage5Hint('');
+    setLessonSeconds(600);
+    setLessonTimerRunning(false);
+    setScreen('start');
+    setDialogue({
+      expression: '웃음',
+      text: '처음부터 다시 시작해 볼까? 물 게이지를 0%에서 100%까지 채워 보자! 💧',
+      waiting: false,
+    });
+  }, [audio]);
+
+  const toggleMic = useCallback(() => {
+    if (isListening && recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch {
+        // ignore
+      }
+      setIsListening(false);
+      return;
+    }
+    const SpeechRec =
+      typeof window !== 'undefined' &&
+      (window.SpeechRecognition || window.webkitSpeechRecognition);
+    if (!SpeechRec) {
+      setMicNotice('이 브라우저에서는 마이크를 지원하지 않아 버튼이나 키보드로 입력해 주세요.');
+      return;
+    }
+    try {
+      const rec = new SpeechRec();
+      rec.lang = 'ko-KR';
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+      rec.onresult = (e) => {
+        const transcript = e.results?.[0]?.[0]?.transcript || '';
+        if (transcript) setReasonDraft(transcript);
+        setIsListening(false);
+      };
+      rec.onerror = () => {
+        setIsListening(false);
+        setMicNotice('마이크 입력이 중단되었어요. 빠른 버튼으로 입력해 주세요.');
+      };
+      rec.onend = () => setIsListening(false);
+      recognitionRef.current = rec;
+      setMicNotice('');
+      setIsListening(true);
+      rec.start();
+    } catch {
+      setIsListening(false);
+      setMicNotice('마이크를 켤 수 없어요. 빠른 버튼으로 바로 입력할 수 있어요.');
+    }
+  }, [isListening]);
+
+  /* --------------------------------------------------------------------------
+   * Drink Selection Handler (Stages 1, 3, 5)
+   * -------------------------------------------------------------------------- */
+  const handleSelectDrink = useCallback(
+    (drinkId, targetPlayerId = activePlayer) => {
+      const p = playersRef.current[targetPlayerId];
+      const drink = DRINKS.find((d) => d.id === drinkId);
+      if (!p || !drink) return;
+
+      if (screen === 'stage1') {
+        const isWater = drinkId === 'water';
+        audio.playSfx(isWater ? 'splash' : 'pop');
+        const msg = isWater
+          ? `${p.shortName}아, 시원한 물을 골랐구나! 왜 물을 골랐는지 알려 줄래? 💧`
+          : `${p.shortName}아, ${drink.name}를 골랐구나! 왜 골랐어? 궁금해! 🤔`;
+        const boost = isWater && !p.stage1.waterBoosted ? 15 : 0;
+        setPlayers((prev) => {
+          const cur = prev[targetPlayerId];
+          return {
+            ...prev,
+            [targetPlayerId]: {
+              ...cur,
+              waterGauge: Math.min(100, cur.waterGauge + boost),
+              gaugeDelta: boost,
+              bangul: { expression: isWater ? '웃음' : '갸웃', reply: msg, valid_reason: false, misconception: '없음' },
+              stage1: { ...cur.stage1, drink: drinkId, waterBoosted: cur.stage1.waterBoosted || isWater },
+            },
+          };
+        });
+        if (boost > 0) clearDeltaLater(targetPlayerId);
+        setDialogue({ expression: isWater ? '웃음' : '갸웃', text: msg, waiting: true });
+      } else if (screen === 'stage3') {
+        const isWater = drinkId === 'water';
+        const isMilk = drinkId === 'milk';
+        audio.playSfx(isWater ? 'splash' : 'pop');
+        const msg = isWater
+          ? `${p.shortName}아, 집에서도 물을 먼저 골랐네! 왜 골랐는지 말해 줄래? 💧`
+          : isMilk
+          ? `${p.shortName}아, 우유는 든든한 간식 친구야! 목이 마를 땐 왜 골랐어? 🥛`
+          : `${p.shortName}아, 냉장고에서 ${drink.name}가 눈에 띄었구나! 왜 골랐어? 🧊`;
+        const boost = isWater && !p.stage3.waterBoosted ? 10 : 0;
+        setPlayers((prev) => {
+          const cur = prev[targetPlayerId];
+          return {
+            ...prev,
+            [targetPlayerId]: {
+              ...cur,
+              waterGauge: Math.min(100, cur.waterGauge + boost),
+              gaugeDelta: boost,
+              bangul: { expression: isWater ? '웃음' : '갸웃', reply: msg, valid_reason: false, misconception: '없음' },
+              stage3: { ...cur.stage3, drink: drinkId, waterBoosted: cur.stage3.waterBoosted || isWater },
+            },
+          };
+        });
+        if (boost > 0) clearDeltaLater(targetPlayerId);
+        setDialogue({ expression: isWater ? '웃음' : '갸웃', text: msg, waiting: true });
+      } else if (screen === 'stage5' && stage5Tab === 'bonus') {
+        audio.playSfx('pop');
+        const msg = `${p.shortName}아, ${drink.name}를 골랐구나! 이유도 한 가지 말해 줄래? 🌱`;
+        setPlayers((prev) => ({
+          ...prev,
+          [targetPlayerId]: {
+            ...prev[targetPlayerId],
+            bangul: { expression: '웃음', reply: msg, valid_reason: false, misconception: '없음' },
+            stage5: { ...prev[targetPlayerId].stage5, drink: drinkId },
+          },
+        }));
+        setDialogue({ expression: '웃음', text: msg, waiting: true });
+      }
+    },
+    [activePlayer, audio, clearDeltaLater, screen, stage5Tab]
+  );
+
+  /* --------------------------------------------------------------------------
+   * Reason Submission Handler (Stages 1, 3, 5) -> Progressive 0% -> 100% Gauge
+   * -------------------------------------------------------------------------- */
+  const handleSubmitReason = useCallback(
+    async (textOverride, targetPlayerId = activePlayer, drinkOverride = null) => {
+      const text = (textOverride !== undefined ? textOverride : reasonDraft).trim();
+      if (!text) return;
+      const latest = playersRef.current;
+      const p = latest[targetPlayerId];
+      const stageKey = screen === 'stage1' ? 'stage1' : screen === 'stage3' ? 'stage3' : 'stage5';
+      const drinkId = drinkOverride || p[stageKey].drink;
+      if (!drinkId) {
+        setDialogue({
+          expression: '갸웃',
+          text: `${p.shortName}아, 먼저 위에서 음료 카드를 하나 골라 줄래? 💧`,
+          waiting: true,
+        });
+        return;
+      }
+
+      const stageNum = screen === 'stage1' ? 1 : screen === 'stage3' ? 3 : 5;
+      const aiRes =
+        stageNum === 5
+          ? {
+              ...evaluateLocally({ playerShortName: p.shortName, drinkId, reasonText: text, stage: 5 }),
+              reply: `${p.shortName}아, 스스로 생각해서 잘 말해 줬어! 물 게이지가 100% 가득 찼어! 🌱`,
+            }
+          : await askBangulAI({
+              apiKey: geminiApiKey,
+              playerShortName: p.shortName,
+              drinkId,
+              reasonText: text,
+              stage: stageNum,
+            });
+
+      setReasonDraft('');
+
+      const awardSticker = stageNum === 1 || stageNum === 3 ? aiRes.valid_reason : false;
+      const stickerIdx = stageNum === 1 ? 0 : 1;
+
+      let addedGauge = 0;
+      setPlayers((prev) => {
+        const cur = prev[targetPlayerId];
+        const nextStickers = [...cur.stickers];
+        if (awardSticker) nextStickers[stickerIdx] = true;
+
+        let targetGauge = cur.waterGauge;
+        if (stageNum === 1 && aiRes.valid_reason && !cur.stage1.completed) {
+          targetGauge = Math.max(cur.waterGauge + 15, 30);
+        } else if (stageNum === 3 && aiRes.valid_reason && !cur.stage3.completed) {
+          targetGauge = Math.min(100, Math.max(cur.waterGauge + 10, 70));
+        } else if (stageNum === 5 && !cur.stage5.completed) {
+          targetGauge = 100;
+        }
+        addedGauge = Math.max(0, targetGauge - cur.waterGauge);
+
+        return {
+          ...prev,
+          [targetPlayerId]: {
+            ...cur,
+            waterGauge: targetGauge,
+            gaugeDelta: addedGauge,
+            stickers: nextStickers,
+            bangul: aiRes,
+            [stageKey]: {
+              ...cur[stageKey],
+              reason: text,
+              history: [...(cur[stageKey].history || []), text],
+              followUpNeeded: stageNum === 5 ? false : !aiRes.valid_reason,
+              validReason: aiRes.valid_reason || cur[stageKey].validReason,
+              misconception:
+                aiRes.misconception && aiRes.misconception !== '없음'
+                  ? aiRes.misconception
+                  : cur[stageKey].misconception,
+              completed: stageNum === 5 ? true : aiRes.valid_reason,
+            },
+          },
+        };
+      });
+
+      if (addedGauge > 0) clearDeltaLater(targetPlayerId);
+      setDialogue({ expression: aiRes.expression, text: aiRes.reply, waiting: !aiRes.valid_reason });
+
+      if (awardSticker || stageNum === 5) {
+        triggerCelebration('confetti');
+      } else {
+        audio.playSfx('pop');
+      }
+
+      const otherId = targetPlayerId === 'seeun' ? 'sehyun' : 'seeun';
+      const thisDone = stageNum === 5 ? true : aiRes.valid_reason;
+      const otherDone = playersRef.current[otherId][stageKey].completed;
+      if (thisDone && !otherDone) {
+        setTimeout(() => setActivePlayer(otherId), 420);
+      }
+      if (thisDone && otherDone && stageNum !== 5) {
+        markStageDone(stageNum - 1);
+      }
+    },
+    [activePlayer, audio, clearDeltaLater, geminiApiKey, markStageDone, reasonDraft, screen, triggerCelebration]
+  );
+
+  /* --------------------------------------------------------------------------
+   * Stage 2: Shared Water Tank Entry (+10% to active player's gauge too!)
+   * -------------------------------------------------------------------------- */
+  const handleAddTankReason = useCallback(
+    (textOverride, targetPlayerId = activePlayer) => {
+      const text = (textOverride !== undefined ? textOverride : stage2Input).trim();
+      if (!text) return;
+      const p = playersRef.current[targetPlayerId];
+      audio.playSfx('splash');
+
+      const nextLevel = Math.min(100, tankLevel + 25);
+      setTankLevel(nextLevel);
+      setTankEntries((prev) => [
+        ...prev,
+        { id: Date.now() + Math.random(), playerId: targetPlayerId, name: p.shortName, text },
+      ]);
+      setStage2Input('');
+
+      addWaterGauge(targetPlayerId, 10);
+      setPlayers((prev) => ({
+        ...prev,
+        [targetPlayerId]: {
+          ...prev[targetPlayerId],
+          stage2: {
+            ...prev[targetPlayerId].stage2,
+            reasons: [...prev[targetPlayerId].stage2.reasons, text],
+          },
+          bangul: {
+            expression: '응원',
+            reply: `${p.shortName}아, 물탱크도 내 물 게이지도 쑥쑥 차오르고 있어! 💧`,
+            valid_reason: true,
+            misconception: '없음',
+          },
+        },
+      }));
+
+      if (nextLevel >= 100) {
+        setStage2TimerRunning(false);
+        setStage2AskLearned(true);
+        markStageDone(1);
+        triggerCelebration('fireworks');
+        setDialogue({
+          expression: '웃음',
+          text: '우와! 둘이 함께 물탱크를 가득 채웠어! 친구 이야기에서 새로 알게 된 점은? 🎉',
+          waiting: true,
+        });
+      } else {
+        const nextPlayer = targetPlayerId === 'seeun' ? 'sehyun' : 'seeun';
+        setActivePlayer(nextPlayer);
+        setDialogue({
+          expression: '응원',
+          text: `좋아! 물탱크가 ${nextLevel}% 찼어! 이제 ${playersRef.current[nextPlayer].shortName}이 차례야! 💧`,
+          waiting: true,
+        });
+      }
+    },
+    [activePlayer, addWaterGauge, audio, markStageDone, stage2Input, tankLevel, triggerCelebration]
+  );
+
+  /* --------------------------------------------------------------------------
+   * Stage 4: Complete Strategy Card (+15% water gauge -> ~85%)
+   * -------------------------------------------------------------------------- */
+  const handleCompleteStrategy = useCallback(
+    (targetPlayerId = activePlayer) => {
+      const p = playersRef.current[targetPlayerId];
+      const s4 = p.stage4;
+
+      if (!s4.situationId) {
+        setBlankFieldAlert('먼저 물 마시기 어려운 상황 카드를 하나 골라 주세요!');
+        return;
+      }
+      if (!s4.solution) {
+        setBlankFieldAlert('추천 해결 카드를 하나 골라 주세요!');
+        return;
+      }
+      if (!s4.when.trim()) {
+        setBlankFieldAlert(`"${p.shortName}아, [언제] 마실지 한 번 더 물어봐 주세요!"`);
+        setDialogue({ expression: '갸웃', text: `${p.shortName}아, 언제 물을 마시면 좋을까? ⏰`, waiting: true });
+        return;
+      }
+      if (!s4.where.trim()) {
+        setBlankFieldAlert(`"${p.shortName}아, [어디서] 마실지 한 번 더 물어봐 주세요!"`);
+        setDialogue({ expression: '갸웃', text: `${p.shortName}아, 어디서 물을 마실까? 정수기·수돗물·물병 다 OK야! 💧`, waiting: true });
+        return;
+      }
+      if (!s4.how.trim()) {
+        setBlankFieldAlert(`"${p.shortName}아, [어떻게] 마실지 한 번 더 물어봐 주세요!"`);
+        setDialogue({ expression: '갸웃', text: `${p.shortName}아, 어떻게 실천해 볼까? 🌟`, waiting: true });
+        return;
+      }
+
+      const sit = DIFFICULT_SITUATIONS.find((s) => s.id === s4.situationId);
+      const finalName = s4.strategyName.trim() || sit?.recommendedNames[0] || '나만의 물 마시기 작전';
+
+      setBlankFieldAlert('');
+      audio.playSfx('flip');
+      triggerCelebration('confetti');
+
+      setPlayers((prev) => {
+        const cur = prev[targetPlayerId];
+        const nextStickers = [...cur.stickers];
+        nextStickers[2] = true;
+        const nextGauge = cur.stage4.completed ? cur.waterGauge : Math.min(90, Math.max(cur.waterGauge + 15, 85));
+        return {
+          ...prev,
+          [targetPlayerId]: {
+            ...cur,
+            waterGauge: nextGauge,
+            gaugeDelta: Math.max(0, nextGauge - cur.waterGauge),
+            stickers: nextStickers,
+            bangul: {
+              expression: '응원',
+              reply: `${cur.shortName}아, "${finalName}" 카드 완성! 정말 멋져! ✨`,
+              valid_reason: true,
+              misconception: '없음',
+            },
+            stage4: { ...cur.stage4, strategyName: finalName, cardFlipped: true, completed: true },
+          },
+        };
+      });
+      clearDeltaLater(targetPlayerId);
+
+      setDialogue({
+        expression: '응원',
+        text: `반짝반짝! ${p.shortName}이의 "${finalName}" 수집 카드가 완성됐어! ✨`,
+        waiting: false,
+      });
+
+      const otherId = targetPlayerId === 'seeun' ? 'sehyun' : 'seeun';
+      if (!playersRef.current[otherId].stage4.completed) {
+        setTimeout(() => setActivePlayer(otherId), 650);
+      } else {
+        markStageDone(3);
+      }
+    },
+    [activePlayer, audio, clearDeltaLater, markStageDone, triggerCelebration]
+  );
+
+  /* --------------------------------------------------------------------------
+   * Stage 5: In-Class Review Quiz -> Grows Bangul's Potted Plant + 100% Gauge
+   * -------------------------------------------------------------------------- */
+  const handleAnswerReviewQuiz = useCallback(
+    (quizItem, option, targetPlayerId = activePlayer) => {
+      const p = playersRef.current[targetPlayerId];
+      if (!p || !quizItem || !option) return;
+
+      if (!option.isCorrect) {
+        audio.playSfx('pop');
+        setStage5Hint(`🌱 새싹이 힌트: "${option.feedback}"`);
+        setDialogue({
+          expression: '갸웃',
+          text: `${p.shortName}아, ${option.feedback}`,
+          waiting: true,
+        });
+        return;
+      }
+
+      setStage5Hint('');
+      audio.playSfx('splash');
+
+      setPlayers((prev) => {
+        const cur = prev[targetPlayerId];
+        const already = cur.stage5.solvedQuizzes.includes(quizItem.id);
+        const nextSolved = already ? cur.stage5.solvedQuizzes : [...cur.stage5.solvedQuizzes, quizItem.id];
+        const nextPlant = Math.min(3, nextSolved.length);
+        const isAllDone = nextSolved.length >= REVIEW_QUIZ_ITEMS.length;
+        const boost = already ? 0 : isAllDone ? Math.max(5, 100 - cur.waterGauge) : 5;
+        const nextGauge = Math.min(100, cur.waterGauge + boost);
+
+        return {
+          ...prev,
+          [targetPlayerId]: {
+            ...cur,
+            waterGauge: nextGauge,
+            gaugeDelta: boost,
+            bangul: {
+              expression: '응원',
+              reply: `${cur.shortName}아, ${option.feedback}`,
+              valid_reason: true,
+              misconception: '없음',
+            },
+            stage5: {
+              ...cur.stage5,
+              validReason: true,
+              reason: `복습 퀴즈 ${nextSolved.length}/3 완료`,
+              solvedQuizzes: nextSolved,
+              plantStage: nextPlant,
+              completed: isAllDone,
+            },
+          },
+        };
+      });
+      clearDeltaLater(targetPlayerId);
+
+      setDialogue({
+        expression: '웃음',
+        text: `${p.shortName}아, ${option.feedback}`,
+        waiting: false,
+      });
+
+      const otherId = targetPlayerId === 'seeun' ? 'sehyun' : 'seeun';
+      const otherSolvedThis = playersRef.current[otherId].stage5.solvedQuizzes.includes(quizItem.id);
+      if (!otherSolvedThis) {
+        setTimeout(() => setActivePlayer(otherId), 380);
+      } else {
+        triggerCelebration('confetti');
+        if (stage5QuizIdx < REVIEW_QUIZ_ITEMS.length - 1) {
+          setTimeout(() => {
+            setStage5QuizIdx((i) => Math.min(REVIEW_QUIZ_ITEMS.length - 1, i + 1));
+            setActivePlayer('seeun');
+          }, 900);
+        }
+      }
+    },
+    [activePlayer, audio, clearDeltaLater, stage5QuizIdx, triggerCelebration]
+  );
+
+  /* --------------------------------------------------------------------------
+   * Demo Auto-Fill ("이 단계 자동 채우기")
+   * -------------------------------------------------------------------------- */
+  const handleDemoAutoFill = useCallback(() => {
+    if (screen === 'start') {
+      setLessonTimerRunning(true);
+      audio.playSfx('hop');
+      setScreen('map');
+      return;
+    }
+    if (screen === 'map') {
+      const nextIdx = completedStages.findIndex((c) => !c);
+      enterStage(nextIdx === -1 ? 5 : nextIdx + 1);
+      return;
+    }
+    if (screen === 'ending') {
+      resetWholeGame();
+      return;
+    }
+
+    const latest = playersRef.current;
+
+    if (screen === 'stage1') {
+      if (!latest.seeun.stage1.drink) {
+        setActivePlayer('seeun');
+        handleSelectDrink('water', 'seeun');
+        setTimeout(() => handleSubmitReason('선생님이 시켜서요', 'seeun', 'water'), 160);
+      } else if (!latest.seeun.stage1.completed) {
+        setActivePlayer('seeun');
+        handleSubmitReason('땀으로 나간 물을 채워 줘요', 'seeun', 'water');
+      } else if (!latest.sehyun.stage1.drink) {
+        setActivePlayer('sehyun');
+        handleSelectDrink('juice', 'sehyun');
+        setTimeout(() => handleSubmitReason('맛있어서요', 'sehyun', 'juice'), 160);
+      } else if (!latest.sehyun.stage1.completed) {
+        setActivePlayer('sehyun');
+        handleSubmitReason('물도 몸에 필요하구나', 'sehyun', 'juice');
+      } else {
+        markStageDone(0);
+        setScreen('map');
+      }
+      return;
+    }
+
+    if (screen === 'stage2') {
+      if (tankLevel < 25) handleAddTankReason('땀 흘린 뒤 물을 마시면 몸이 시원해져요', 'seeun');
+      else if (tankLevel < 50) handleAddTankReason('물은 설탕이 없어서 목이 안 답답해요', 'sehyun');
+      else if (tankLevel < 75) handleAddTankReason('몸속에 물이 많아야 힘이 나요', 'seeun');
+      else if (tankLevel < 100) handleAddTankReason('물 마시면 머리가 맑아져요', 'sehyun');
+      else if (!latest.seeun.stage2.learned) {
+        setPlayers((prev) => ({
+          ...prev,
+          seeun: { ...prev.seeun, stage2: { ...prev.seeun.stage2, learned: '설탕 없는 물이 갈증에 좋다는 걸 알았어요' } },
+          sehyun: { ...prev.sehyun, stage2: { ...prev.sehyun.stage2, learned: '친구 말 들으니 물이 힘도 나게 해 줘요' } },
+        }));
+        setDialogue({ expression: '웃음', text: '서로 이야기를 잘 들었구나! 둘이 함께하니 더 멋진 걸 알게 됐어! 🌟', waiting: false });
+      } else {
+        markStageDone(1);
+        setScreen('map');
+      }
+      return;
+    }
+
+    if (screen === 'stage3') {
+      if (!latest.seeun.stage3.completed) {
+        setActivePlayer('seeun');
+        handleSelectDrink('water', 'seeun');
+        setTimeout(() => handleSubmitReason('집에서도 목마를 땐 물 먼저 마셔요', 'seeun', 'water'), 160);
+      } else if (!latest.sehyun.stage3.drink) {
+        setActivePlayer('sehyun');
+        handleSelectDrink('milk', 'sehyun');
+        setTimeout(() => handleSubmitReason('맛있어서요', 'sehyun', 'milk'), 160);
+      } else if (!latest.sehyun.stage3.completed) {
+        setActivePlayer('sehyun');
+        handleSubmitReason('목마를 땐 물, 우유는 간식 친구예요', 'sehyun', 'milk');
+      } else {
+        markStageDone(2);
+        setScreen('map');
+      }
+      return;
+    }
+
+    if (screen === 'stage4') {
+      if (!latest.seeun.stage4.completed) {
+        const sit = DIFFICULT_SITUATIONS.find((s) => s.id === 'home_tv');
+        setActivePlayer('seeun');
+        setPlayers((prev) => ({
+          ...prev,
+          seeun: {
+            ...prev.seeun,
+            waterGauge: 85,
+            gaugeDelta: Math.max(0, 85 - prev.seeun.waterGauge),
+            stickers: [prev.seeun.stickers[0], prev.seeun.stickers[1], true],
+            bangul: { expression: '응원', reply: '세은아, "TV 탐정 물컵 작전" 카드 완성! ✨', valid_reason: true, misconception: '없음' },
+            stage4: {
+              situationId: sit.id,
+              solution: sit.solutions[0],
+              when: sit.defaults.when,
+              where: sit.defaults.where,
+              how: sit.defaults.how,
+              strategyName: 'TV 탐정 물컵 작전',
+              cardFlipped: true,
+              completed: true,
+            },
+          },
+        }));
+        clearDeltaLater('seeun');
+        audio.playSfx('flip');
+        triggerCelebration('confetti');
+        setDialogue({ expression: '응원', text: '세은이의 "TV 탐정 물컵 작전" 카드가 완성됐어! ✨', waiting: false });
+        setTimeout(() => setActivePlayer('sehyun'), 480);
+      } else if (!latest.sehyun.stage4.completed) {
+        const sit = DIFFICULT_SITUATIONS.find((s) => s.id === 'home_juice');
+        setActivePlayer('sehyun');
+        setPlayers((prev) => ({
+          ...prev,
+          sehyun: {
+            ...prev.sehyun,
+            waterGauge: 85,
+            gaugeDelta: Math.max(0, 85 - prev.sehyun.waterGauge),
+            stickers: [prev.sehyun.stickers[0], prev.sehyun.stickers[1], true],
+            bangul: { expression: '응원', reply: '세현아, "냉장고 물 먼저 작전" 카드 완성! ✨', valid_reason: true, misconception: '없음' },
+            stage4: {
+              situationId: sit.id,
+              solution: sit.solutions[0],
+              when: sit.defaults.when,
+              where: sit.defaults.where,
+              how: sit.defaults.how,
+              strategyName: '냉장고 물 먼저 작전',
+              cardFlipped: true,
+              completed: true,
+            },
+          },
+        }));
+        clearDeltaLater('sehyun');
+        markStageDone(3);
+        audio.playSfx('flip');
+        triggerCelebration('confetti');
+        setDialogue({ expression: '응원', text: '세현이의 "냉장고 물 먼저 작전" 카드도 완성! 이제 마지막 단계로 가자! 🌟', waiting: false });
+      } else {
+        setScreen('map');
+      }
+      return;
+    }
+
+    if (screen === 'stage5') {
+      if (stage5Tab === 'quiz') {
+        const q = REVIEW_QUIZ_ITEMS[stage5QuizIdx];
+        const sDone = latest.seeun.stage5.solvedQuizzes.includes(q.id);
+        const hDone = latest.sehyun.stage5.solvedQuizzes.includes(q.id);
+        const correctOpt = q.options.find((o) => o.isCorrect);
+        if (!sDone) {
+          setActivePlayer('seeun');
+          handleAnswerReviewQuiz(q, correctOpt, 'seeun');
+        } else if (!hDone) {
+          setActivePlayer('sehyun');
+          handleAnswerReviewQuiz(q, correctOpt, 'sehyun');
+        } else if (stage5QuizIdx < REVIEW_QUIZ_ITEMS.length - 1) {
+          setStage5QuizIdx((i) => i + 1);
+          setStage5Hint('');
+          setActivePlayer('seeun');
+        } else {
+          setStage5Tab('family');
+          setDialogue({
+            expression: '응원',
+            text: '둘 다 화분에 꽃을 활짝 피웠어! 집에 가져갈 가족 안내 카드도 확인해 보자! 💌',
+            waiting: false,
+          });
+        }
+      } else if (stage5Tab === 'family') {
+        markStageDone(4);
+        setScreen('ending');
+        triggerCelebration('fireworks');
+        setDialogue({
+          expression: '응원',
+          text: '둘 다 물 게이지 100% 달성! 멋진 물 마시기 대원이 되었어! 🎉',
+          waiting: false,
+        });
+      }
+    }
+  }, [
+    audio,
+    clearDeltaLater,
+    completedStages,
+    enterStage,
+    handleAddTankReason,
+    handleAnswerReviewQuiz,
+    handleSelectDrink,
+    handleSubmitReason,
+    markStageDone,
+    resetWholeGame,
+    screen,
+    stage5QuizIdx,
+    stage5Tab,
+    tankLevel,
+    triggerCelebration,
+  ]);
+
+  /* --------------------------------------------------------------------------
+   * Keyboard Shortcuts: 1~5 Drinks, Tab Switch Player, Enter/Space Next Step
+   * -------------------------------------------------------------------------- */
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (showTeacherModal || showApiModal) return;
+      const tag = document.activeElement?.tagName;
+      const isTyping = tag === 'INPUT' || tag === 'TEXTAREA';
+
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        audio.playSfx('pop');
+        setActivePlayer((p) => (p === 'seeun' ? 'sehyun' : 'seeun'));
+        return;
+      }
+      if (isTyping) return;
+
+      if (['1', '2', '3', '4', '5'].includes(e.key)) {
+        const idx = Number(e.key) - 1;
+        if (screen === 'stage1' || screen === 'stage3' || (screen === 'stage5' && stage5Tab === 'bonus')) {
+          e.preventDefault();
+          handleSelectDrink(DRINKS[idx].id, activePlayer);
+        }
+        return;
+      }
+
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const latest = playersRef.current;
+        if (screen === 'start') {
+          setLessonTimerRunning(true);
+          audio.playSfx('hop');
+          setScreen('map');
+        } else if (screen === 'map') {
+          const nextIdx = completedStages.findIndex((c) => !c);
+          enterStage(nextIdx === -1 ? 5 : nextIdx + 1);
+        } else if (screen === 'stage1' && latest.seeun.stage1.completed && latest.sehyun.stage1.completed) {
+          markStageDone(0);
+          setScreen('map');
+        } else if (screen === 'stage2' && tankLevel >= 100) {
+          markStageDone(1);
+          setScreen('map');
+        } else if (screen === 'stage3' && latest.seeun.stage3.completed && latest.sehyun.stage3.completed) {
+          markStageDone(2);
+          setScreen('map');
+        } else if (screen === 'stage4' && latest.seeun.stage4.completed && latest.sehyun.stage4.completed) {
+          markStageDone(3);
+          setScreen('map');
+        } else if (screen === 'stage5') {
+          if (stage5Tab === 'quiz' && latest.seeun.stage5.completed && latest.sehyun.stage5.completed) {
+            setStage5Tab('family');
+          } else if (stage5Tab === 'family') {
+            markStageDone(4);
+            setScreen('ending');
+            triggerCelebration('fireworks');
+          }
+        }
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [
+    activePlayer,
+    audio,
+    completedStages,
+    enterStage,
+    handleSelectDrink,
+    markStageDone,
+    screen,
+    showApiModal,
+    showTeacherModal,
+    stage5QuizIdx,
+    stage5Tab,
+    tankLevel,
+    triggerCelebration,
+  ]);
+
+  const formatClock = (sec) => {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  };
+
+  const goPrevStage = () => {
+    audio.playSfx('pop');
+    if (screen === 'map') setScreen('start');
+    else if (screen === 'ending') enterStage(5);
+    else if (currentStageNum > 1) enterStage(currentStageNum - 1);
+    else setScreen('map');
+  };
+
+  const goNextStage = () => {
+    audio.playSfx('pop');
+    if (screen === 'start') setScreen('map');
+    else if (screen === 'map') enterStage(1);
+    else if (currentStageNum >= 1 && currentStageNum < 5) enterStage(currentStageNum + 1);
+    else if (currentStageNum === 5) {
+      markStageDone(4);
+      setScreen('ending');
+      triggerCelebration('fireworks');
+    }
+  };
+
+  const curPlayer = players[activePlayer];
+
+  /* ==========================================================================
+   * Render Center Stage Content (Clean, Uncluttered Visual Hierarchy)
+   * ========================================================================== */
+  const renderCenterStage = () => {
+    /* -------------------- START SCREEN -------------------- */
+    if (screen === 'start') {
+      return (
+        <div className="flex-1 min-h-0 bg-white/90 rounded-[28px] border-[3px] border-sky-200 shadow-lg flex flex-col items-center justify-center text-center px-6 py-4">
+          <span className="px-4 py-1 rounded-full bg-amber-100 text-amber-800 font-black text-sm xl:text-base mb-3">
+            초등학교 3학년 영양교육 모험 게임
+          </span>
+
+          <h1 className="text-[36px] xl:text-[54px] font-black text-slate-900 leading-tight tracking-tight mb-2">
+            방울이의 <span className="text-sky-600">물 마시기</span> 대모험
+          </h1>
+          <p className="text-[18px] xl:text-[26px] font-bold text-slate-500 mb-5">
+            목이 마를 땐 무엇을 마실까? 0%에서 100%까지 물 게이지를 채워요!
+          </p>
+
+          <div className="my-2">
+            <BangulAvatar expression="웃음" size={136} />
+          </div>
+
+          <button
+            onClick={() => {
+              setLessonTimerRunning(true);
+              audio.playSfx('hop');
+              setScreen('map');
+              setDialogue({
+                expression: '응원',
+                text: '지도를 따라 5개의 물 마시기 미션을 함께 깨 보자! 첫 번째 장소로 폴짝! 💧',
+                waiting: false,
+              });
+            }}
+            className="mt-4 px-10 py-3.5 rounded-full bg-gradient-to-b from-amber-300 to-amber-400 border-[3px] border-slate-900 shadow-[0_6px_0_#0F172A] hover:brightness-105 active:translate-y-1 active:shadow-[0_2px_0_#0F172A] text-[26px] xl:text-[32px] font-black text-slate-900 flex items-center gap-3 pulse-btn"
+          >
+            <Sparkles className="w-7 h-7" /> 모험 시작! <ArrowRight className="w-7 h-7" />
+          </button>
+
+          <p className="mt-5 text-xs xl:text-sm font-bold text-slate-400">
+            단축키: [1~5] 음료 선택 · [Tab] 세은/세현 전환 · [Enter/Space] 다음 단계
+          </p>
+        </div>
+      );
+    }
+
+    /* -------------------- BOARD-GAME STAGE MAP -------------------- */
+    if (screen === 'map') {
+      const nextIdx = completedStages.findIndex((c) => !c);
+      const activeIdx = nextIdx === -1 ? 4 : nextIdx;
+      const coords = [
+        { x: 110, y: 235 },
+        { x: 280, y: 120 },
+        { x: 460, y: 235 },
+        { x: 640, y: 120 },
+        { x: 810, y: 215 },
+      ];
+
+      return (
+        <div className="flex-1 min-h-0 flex flex-col justify-between bg-white/95 rounded-[28px] border-[3px] border-sky-200 shadow-lg p-4 overflow-hidden">
+          <div className="flex items-center justify-between">
+            <h2 className="text-[24px] xl:text-[30px] font-black text-slate-900">
+              🗺️ 물방울 모험 지도
+            </h2>
+            <span className="px-3.5 py-1 rounded-full bg-sky-100 text-sky-800 font-black text-sm xl:text-base">
+              완료 {completedStages.filter(Boolean).length} / 5
+            </span>
+          </div>
+
+          <div className="flex-1 min-h-0 flex items-center justify-center">
+            <svg viewBox="0 0 920 330" className="w-full h-full max-h-[330px]">
+              <path
+                d="M110 235 C180 235 200 120 280 120 C360 120 380 235 460 235 C540 235 560 120 640 120 C720 120 740 215 810 215"
+                fill="none"
+                stroke="#CBD5E1"
+                strokeWidth="22"
+                strokeLinecap="round"
+              />
+              <path
+                d="M110 235 C180 235 200 120 280 120 C360 120 380 235 460 235 C540 235 560 120 640 120 C720 120 740 215 810 215"
+                fill="none"
+                stroke="#38BDF8"
+                strokeWidth="10"
+                strokeLinecap="round"
+                strokeDasharray="16 14"
+              />
+
+              {STAGES_META.map((st, idx) => {
+                const pt = coords[idx];
+                const done = completedStages[idx];
+                const isNext = idx === activeIdx;
+                return (
+                  <g key={st.id} onClick={() => enterStage(st.id)} className="cursor-pointer">
+                    <circle
+                      cx={pt.x}
+                      cy={pt.y}
+                      r={isNext ? 48 : 42}
+                      fill={done ? '#FDE047' : isNext ? '#38BDF8' : '#F8FAFC'}
+                      stroke="#1E293B"
+                      strokeWidth="4"
+                    />
+                    <text x={pt.x} y={pt.y + 11} textAnchor="middle" fontSize="34">
+                      {st.emoji}
+                    </text>
+                    {done && (
+                      <text x={pt.x + 30} y={pt.y - 26} textAnchor="middle" fontSize="26">
+                        ⭐
+                      </text>
+                    )}
+                    <rect
+                      x={pt.x - 66}
+                      y={pt.y + 52}
+                      width="132"
+                      height="32"
+                      rx="14"
+                      fill="#FFFFFF"
+                      stroke="#CBD5E1"
+                      strokeWidth="2.5"
+                    />
+                    <text x={pt.x} y={pt.y + 73} textAnchor="middle" fontSize="16" fontWeight="900" fill="#1E293B">
+                      {st.id}. {st.short}
+                    </text>
+                  </g>
+                );
+              })}
+
+              <g transform={`translate(${coords[activeIdx].x - 36}, ${coords[activeIdx].y - 102})`} className="bangul-hop">
+                <circle cx="36" cy="40" r="24" fill="#38BDF8" stroke="#1E293B" strokeWidth="3.5" />
+                <path d="M36 6 L54 34 L18 34 Z" fill="#38BDF8" stroke="#1E293B" strokeWidth="3.5" strokeLinejoin="round" />
+                <circle cx="29" cy="40" r="3" fill="#1E293B" />
+                <circle cx="43" cy="40" r="3" fill="#1E293B" />
+                <path d="M30 48 Q36 54 42 48" fill="none" stroke="#1E293B" strokeWidth="2.8" strokeLinecap="round" />
+              </g>
+            </svg>
+          </div>
+
+          <div className="flex items-center justify-center gap-3">
+            <button
+              onClick={() => enterStage(activeIdx + 1)}
+              className="px-7 py-2.5 rounded-full bg-amber-300 border-[3px] border-slate-900 shadow-[0_5px_0_#0F172A] active:translate-y-0.5 text-[22px] xl:text-[26px] font-black text-slate-900"
+            >
+              {STAGES_META[activeIdx].id}단계 "{STAGES_META[activeIdx].title}" 출발! ▶
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    /* -------------------- STAGE 1: 운동장 땀방울 대작전 -------------------- */
+    if (screen === 'stage1') {
+      const pState = curPlayer.stage1;
+      const bothDone = players.seeun.stage1.completed && players.sehyun.stage1.completed;
+
+      return (
+        <div className="flex-1 min-h-0 flex flex-col gap-3 bg-white/95 rounded-[28px] border-[3px] border-sky-200 shadow-lg p-3.5 xl:p-4 overflow-hidden">
+          {/* Clean Playground Scene */}
+          <div
+            onClick={() => setStage1IntroActive(false)}
+            className="h-[88px] xl:h-[112px] rounded-2xl bg-gradient-to-r from-sky-200 via-sky-100 to-emerald-100 border-2 border-sky-200 relative overflow-hidden shrink-0 cursor-pointer flex items-center justify-between px-5"
+          >
+            <div>
+              <div className="text-xs font-black text-sky-700 uppercase tracking-wide">STAGE 1</div>
+              <h2 className="text-[22px] xl:text-[28px] font-black text-slate-900">
+                운동장 땀방울 대작전 ⚽
+              </h2>
+            </div>
+            <div className={`flex items-center gap-4 text-3xl xl:text-4xl ${stage1IntroActive ? 'run-across' : ''}`}>
+              <span>🏃‍♀️💦</span>
+              <span>🏃‍♂️💦</span>
+            </div>
+          </div>
+
+          {/* Step 1: 5 Drink Cards */}
+          <div>
+            <div className="text-xs xl:text-sm font-black text-slate-500 mb-1.5">
+              STEP 1 · {curPlayer.name}의 음료 선택 (숫자키 1~5)
+            </div>
+            <div className="grid grid-cols-5 gap-2">
+              {DRINKS.map((d) => {
+                const selected = pState.drink === d.id;
+                return (
+                  <button
+                    key={d.id}
+                    onClick={() => handleSelectDrink(d.id, activePlayer)}
+                    className={`rounded-2xl border-2 p-2.5 flex flex-col items-center justify-center transition-all active:scale-95 ${
+                      selected
+                        ? 'bg-amber-200 border-slate-900 shadow-[0_4px_0_#0F172A] -translate-y-0.5'
+                        : 'bg-slate-50 border-slate-200 hover:border-sky-400 hover:bg-sky-50'
+                    }`}
+                  >
+                    <span className="text-3xl xl:text-4xl">{d.emoji}</span>
+                    <span className="text-base xl:text-[22px] font-black text-slate-900 mt-1">{d.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Step 2: Reason Input */}
+          <div className="flex-1 min-h-0 bg-slate-50 rounded-2xl border-2 border-slate-200 p-3 flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-sm xl:text-base font-black text-slate-700">
+                STEP 2 · {curPlayer.name}의 이유 입력
+              </span>
+              {pState.completed && (
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-200 text-emerald-900 text-xs font-black">
+                  스티커 획득 완료 ✓
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-wrap gap-1.5 my-1">
+              {REASON_SENTENCE_CHIPS.map((chip) => (
+                <button
+                  key={chip}
+                  onClick={() => handleSubmitReason(chip, activePlayer)}
+                  className="px-3 py-1.5 rounded-xl bg-white hover:bg-sky-100 border-2 border-sky-200 text-sm xl:text-base font-extrabold text-slate-800 shadow-sm"
+                >
+                  {chip}
+                </button>
+              ))}
+              {REASON_QUICK_CHIPS.map((chip) => (
+                <button
+                  key={chip}
+                  onClick={() => handleSubmitReason(chip, activePlayer)}
+                  className="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border-2 border-amber-300 text-sm xl:text-base font-extrabold text-amber-900 shadow-sm"
+                >
+                  ⚡ {chip}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={reasonDraft}
+                onChange={(e) => setReasonDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleSubmitReason(undefined, activePlayer);
+                }}
+                placeholder={`${curPlayer.shortName}이가 말한 이유를 직접 입력하거나 마이크를 누르세요`}
+                className="flex-1 px-3.5 py-2 rounded-xl bg-white border-2 border-slate-300 text-sm xl:text-base font-bold focus:outline-none focus:border-sky-500"
+              />
+              <button
+                onClick={toggleMic}
+                className={`px-3 py-2 rounded-xl border-2 font-black flex items-center gap-1 ${
+                  isListening ? 'bg-rose-500 text-white border-rose-600 animate-pulse' : 'bg-white border-slate-300 text-slate-700'
+                }`}
+                title="마이크 받아쓰기"
+              >
+                {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              </button>
+              <button
+                onClick={() => handleSubmitReason(undefined, activePlayer)}
+                className="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-black text-base shadow-sm"
+              >
+                입력
+              </button>
+              {bothDone && (
+                <button
+                  onClick={() => {
+                    markStageDone(0);
+                    setScreen('map');
+                  }}
+                  className="px-4 py-2 rounded-xl bg-amber-300 border-2 border-slate-900 font-black text-base text-slate-900 whitespace-nowrap"
+                >
+                  다음 지도로 ▶
+                </button>
+              )}
+            </div>
+            {micNotice && <div className="text-xs font-bold text-amber-700">{micNotice}</div>}
+          </div>
+        </div>
+      );
+    }
+
+    /* -------------------- STAGE 2: 둘이 함께 물탱크 채우기 -------------------- */
+    if (screen === 'stage2') {
+      const tankFull = tankLevel >= 100;
+
+      return (
+        <div className="flex-1 min-h-0 flex flex-col gap-3 bg-white/95 rounded-[28px] border-[3px] border-sky-200 shadow-lg p-3.5 xl:p-4 overflow-hidden">
+          <div className="flex items-center justify-between">
+            <h2 className="text-[22px] xl:text-[28px] font-black text-slate-900">
+              2단계 · 둘이 함께 물탱크 채우기 🤝
+            </h2>
+            <div className="flex items-center gap-2">
+              <span className="px-3 py-1 rounded-xl bg-amber-100 text-amber-900 font-black text-base xl:text-lg flex items-center gap-1.5">
+                <Clock className="w-5 h-5" /> {stage2Timer}초
+              </span>
+              <button
+                onClick={() => setStage2TimerRunning((r) => !r)}
+                className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-black text-sm text-slate-800"
+              >
+                {stage2TimerRunning ? '일시정지' : '30초 시작'}
+              </button>
+            </div>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-12 gap-4 items-center">
+            <div className="col-span-5 h-full flex flex-col items-center justify-center">
+              <div className="w-44 xl:w-52 h-44 xl:h-56 rounded-[30px] border-[4px] border-sky-400 bg-sky-50/40 relative overflow-hidden shadow-inner">
+                <div
+                  className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-sky-500 via-cyan-400 to-sky-300 transition-all duration-700"
+                  style={{ height: `${tankLevel}%` }}
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+                  {tankFull ? (
+                    <BangulAvatar expression="응원" size={88} dancing />
+                  ) : (
+                    <span className="text-4xl xl:text-5xl font-black text-slate-900 drop-shadow-[0_2px_0_#FFF]">
+                      {tankLevel}%
+                    </span>
+                  )}
+                  <span className="mt-1 px-3 py-0.5 rounded-full bg-white/90 text-xs xl:text-sm font-black text-sky-800 shadow-sm">
+                    {tankFull ? '둘이 함께 성공! 🎉' : '경쟁 없이 함께!'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-span-7 h-full flex flex-col justify-between bg-slate-50 rounded-2xl border-2 border-slate-200 p-3">
+              {!stage2AskLearned ? (
+                <>
+                  <div className="text-sm xl:text-base font-black text-slate-700">
+                    💧 물이 좋은 이유를 한 줄씩 넣어 주세요 (지금 차례: {curPlayer.name})
+                  </div>
+                  <div className="flex-1 min-h-0 overflow-y-auto space-y-1.5 my-1.5">
+                    {tankEntries.length === 0 ? (
+                      <div className="text-sm font-bold text-slate-400 py-4 text-center">
+                        아래 버튼을 누르거나 한 줄 입력하면 물탱크와 물 게이지가 함께 올라가요!
+                      </div>
+                    ) : (
+                      tankEntries.map((item) => (
+                        <div key={item.id} className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-sm font-bold flex items-center gap-2">
+                          <span className="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-xs font-black">
+                            {item.name}
+                          </span>
+                          <span className="truncate">{item.text}</span>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 my-1">
+                    {STAGE2_QUICK_REASONS.map((r) => (
+                      <button
+                        key={r}
+                        onClick={() => handleAddTankReason(r, activePlayer)}
+                        className="px-2.5 py-1 rounded-xl bg-white hover:bg-sky-100 border border-sky-200 text-xs xl:text-sm font-extrabold text-slate-800"
+                      >
+                        + {r}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex gap-2 mt-1">
+                    <input
+                      type="text"
+                      value={stage2Input}
+                      onChange={(e) => setStage2Input(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleAddTankReason(undefined, activePlayer);
+                      }}
+                      placeholder={`${curPlayer.shortName}이가 말한 이유 한 줄 입력`}
+                      className="flex-1 px-3 py-1.5 rounded-xl bg-white border-2 border-slate-300 text-sm font-bold"
+                    />
+                    <button
+                      onClick={() => handleAddTankReason(undefined, activePlayer)}
+                      className="px-4 py-1.5 rounded-xl bg-sky-500 text-white font-black text-sm xl:text-base"
+                    >
+                      물 붓기 💧
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-col justify-between h-full">
+                  <div className="text-base xl:text-xl font-black text-emerald-700">
+                    🌟 방울이 질문: "친구 이야기에서 새로 알게 된 점은?"
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 my-2">
+                    {STAGE2_LEARNED_CHIPS.map((c) => (
+                      <button
+                        key={c}
+                        onClick={() => {
+                          audio.playSfx('pop');
+                          setPlayers((prev) => ({
+                            ...prev,
+                            [activePlayer]: {
+                              ...prev[activePlayer],
+                              stage2: { ...prev[activePlayer].stage2, learned: c },
+                            },
+                          }));
+                          setDialogue({
+                            expression: '웃음',
+                            text: `${curPlayer.shortName}아, 친구 이야기를 정말 귀 기울여 들었구나! 💛`,
+                            waiting: false,
+                          });
+                        }}
+                        className="px-3 py-1.5 rounded-xl bg-white hover:bg-emerald-50 border-2 border-emerald-200 text-sm font-extrabold"
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs xl:text-sm font-bold">
+                    <div className="p-2.5 rounded-xl bg-sky-50 border border-sky-200">
+                      서세은: {players.seeun.stage2.learned || '말로 나누는 중'}
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-orange-50 border border-orange-200">
+                      이세현: {players.sehyun.stage2.learned || '말로 나누는 중'}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      markStageDone(1);
+                      setScreen('map');
+                    }}
+                    className="mt-2 w-full py-2.5 rounded-xl bg-amber-300 border-2 border-slate-900 font-black text-lg"
+                  >
+                    3단계 지도로 이동! ▶
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* -------------------- STAGE 3: 우리 집 냉장고 유혹 탈출 -------------------- */
+    if (screen === 'stage3') {
+      const pState = curPlayer.stage3;
+      const bothDone = players.seeun.stage3.completed && players.sehyun.stage3.completed;
+      const fridgeDrinks = DRINKS.slice(0, 4);
+
+      return (
+        <div className="flex-1 min-h-0 flex flex-col gap-3 bg-white/95 rounded-[28px] border-[3px] border-sky-200 shadow-lg p-3.5 xl:p-4 overflow-hidden">
+          <div className="flex items-center justify-between">
+            <h2 className="text-[22px] xl:text-[28px] font-black text-slate-900">
+              3단계 · 우리 집 냉장고 유혹 탈출 📺🧊
+            </h2>
+            <span className="px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs xl:text-sm font-black">
+              목마를 땐 물 먼저 · 우유는 간식 친구
+            </span>
+          </div>
+
+          <div className="grid grid-cols-12 gap-3 shrink-0">
+            <div className="col-span-3 bg-amber-50 rounded-2xl border-2 border-amber-200 p-2.5 flex flex-col items-center justify-center">
+              <div className="w-full h-16 xl:h-20 rounded-xl bg-slate-800 flex items-center justify-center text-white font-black text-sm">
+                📺 만화 방영 중
+              </div>
+              <div className="text-xs font-extrabold text-amber-900 mt-1.5">TV 보다 목이 말라요!</div>
+            </div>
+
+            <div
+              className={`col-span-9 rounded-2xl border-2 border-sky-200 bg-sky-50/70 p-2.5 transition-all duration-500 ${
+                fridgeOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-70'
+              }`}
+            >
+              <div className="grid grid-cols-4 gap-2">
+                {fridgeDrinks.map((d) => {
+                  const selected = pState.drink === d.id;
+                  return (
+                    <button
+                      key={d.id}
+                      onClick={() => handleSelectDrink(d.id, activePlayer)}
+                      className={`rounded-2xl border-2 p-2 flex flex-col items-center transition-all ${
+                        selected
+                          ? 'bg-amber-200 border-slate-900 shadow-[0_4px_0_#0F172A]'
+                          : 'bg-white border-sky-200 hover:border-sky-400'
+                      }`}
+                    >
+                      <div className="w-full px-1.5 py-0.5 rounded-lg bg-amber-50 text-[10px] xl:text-xs font-extrabold text-amber-900 mb-1 truncate text-center">
+                        "{d.fridgeQuote}"
+                      </div>
+                      <span className="text-2xl xl:text-3xl">{d.emoji}</span>
+                      <span className="text-sm xl:text-base font-black text-slate-900 mt-0.5">{d.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-1 min-h-0 bg-slate-50 rounded-2xl border-2 border-slate-200 p-3 flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-sm xl:text-base font-black text-slate-700">
+                💬 {curPlayer.name}의 선택 이유
+              </span>
+              {pState.completed && (
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-200 text-emerald-900 text-xs font-black">
+                  스티커 획득 ✓
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-wrap gap-1.5 my-1">
+              {STAGE3_REASON_CHIPS.map((chip) => (
+                <button
+                  key={chip}
+                  onClick={() => handleSubmitReason(chip, activePlayer)}
+                  className="px-3 py-1.5 rounded-xl bg-white hover:bg-sky-100 border-2 border-sky-200 text-xs xl:text-base font-extrabold"
+                >
+                  {chip}
+                </button>
+              ))}
+              {REASON_QUICK_CHIPS.map((chip) => (
+                <button
+                  key={chip}
+                  onClick={() => handleSubmitReason(chip, activePlayer)}
+                  className="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border-2 border-amber-300 text-xs xl:text-base font-extrabold text-amber-900"
+                >
+                  ⚡ {chip}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={reasonDraft}
+                onChange={(e) => setReasonDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleSubmitReason(undefined, activePlayer);
+                }}
+                placeholder={`${curPlayer.shortName}이의 이유를 입력해 주세요`}
+                className="flex-1 px-3 py-1.5 rounded-xl bg-white border-2 border-slate-300 text-sm xl:text-base font-bold"
+              />
+              <button
+                onClick={() => handleSubmitReason(undefined, activePlayer)}
+                className="px-5 py-1.5 rounded-xl bg-sky-500 text-white font-black text-base"
+              >
+                입력
+              </button>
+              {bothDone && (
+                <button
+                  onClick={() => {
+                    markStageDone(2);
+                    setScreen('map');
+                  }}
+                  className="px-4 py-1.5 rounded-xl bg-amber-300 border-2 border-slate-900 font-black text-base whitespace-nowrap"
+                >
+                  4단계 지도로 ▶
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* -------------------- STAGE 4: 나만의 물 마시기 작전 짜기 (큰 글씨 3단계 마법사) -------------------- */
+    if (screen === 'stage4') {
+      const s4 = curPlayer.stage4;
+      const sit = DIFFICULT_SITUATIONS.find((s) => s.id === s4.situationId);
+      const bothDone = players.seeun.stage4.completed && players.sehyun.stage4.completed;
+
+      const updateS4 = (patch) => {
+        setBlankFieldAlert('');
+        setPlayers((prev) => ({
+          ...prev,
+          [activePlayer]: {
+            ...prev[activePlayer],
+            stage4: { ...prev[activePlayer].stage4, ...patch },
+          },
+        }));
+      };
+
+      const stepItems = [
+        { num: 1, label: '① 어려운 상황' },
+        { num: 2, label: '② 해결·실천 계획' },
+        { num: 3, label: '③ 작전 이름' },
+      ];
+
+      return (
+        <div className="flex-1 min-h-0 flex flex-col gap-3 bg-white/95 rounded-[28px] border-[3px] border-sky-200 shadow-lg p-4 xl:p-5 overflow-hidden">
+          {/* Top Header + Clear 3-Step Indicator */}
+          <div className="flex items-center justify-between gap-2 shrink-0 flex-wrap">
+            <h2 className="text-[22px] xl:text-[28px] font-black text-slate-900">
+              4단계 · {curPlayer.name}의 작전 짜기 🗺️
+            </h2>
+            {!s4.cardFlipped && (
+              <div className="flex items-center gap-1.5">
+                {stepItems.map((st) => (
+                  <button
+                    key={st.num}
+                    onClick={() => {
+                      if (st.num > 1 && !s4.situationId) {
+                        setBlankFieldAlert('먼저 ① 어려운 상황 카드를 하나 골라 주세요!');
+                        return;
+                      }
+                      setStage4Step(st.num);
+                    }}
+                    className={`px-3 py-1 rounded-full text-sm xl:text-base font-black transition-all ${
+                      stage4Step === st.num
+                        ? 'bg-sky-500 text-white shadow-sm'
+                        : stage4Step > st.num
+                        ? 'bg-emerald-100 text-emerald-800'
+                        : 'bg-slate-100 text-slate-400'
+                    }`}
+                  >
+                    {st.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {blankFieldAlert && (
+            <div className="px-4 py-2.5 rounded-2xl bg-amber-100 border-2 border-amber-400 font-black text-base xl:text-xl text-amber-950 flex items-center gap-2 shrink-0">
+              <AlertCircle className="w-6 h-6 shrink-0" /> {blankFieldAlert}
+            </div>
+          )}
+
+          {/* Completed Gleaming Collectible Card */}
+          {s4.cardFlipped ? (
+            <div className="flex-1 min-h-0 flex flex-col items-center justify-center gap-4">
+              <div className="w-full max-w-xl rounded-[28px] border-[3px] border-slate-900 bg-gradient-to-br from-amber-100 via-sky-100 to-emerald-100 p-5 xl:p-6 shadow-lg card-flip-in">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="px-3.5 py-1 rounded-full bg-white text-sky-800 text-sm xl:text-base font-black">
+                    ★ {curPlayer.name}의 작전 수집 카드
+                  </span>
+                  <span className="text-3xl">✨</span>
+                </div>
+                <div className="text-[26px] xl:text-[34px] font-black text-slate-900 mb-3">
+                  "{s4.strategyName}"
+                </div>
+                <div className="bg-white/95 rounded-2xl p-4 space-y-1.5 text-base xl:text-xl font-bold text-slate-800">
+                  <div>• 어려운 상황: {sit?.place} — {sit?.title}</div>
+                  <div>• 해결 방법: {s4.solution}</div>
+                  <div>• 언제 / 어디서: {s4.when} · {s4.where}</div>
+                  <div>• 어떻게: {s4.how}</div>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    updateS4({ cardFlipped: false });
+                    setStage4Step(2);
+                  }}
+                  className="px-5 py-2.5 rounded-xl bg-slate-100 border-2 border-slate-300 font-black text-base text-slate-700"
+                >
+                  내용 수정하기
+                </button>
+                {bothDone ? (
+                  <button
+                    onClick={() => {
+                      markStageDone(3);
+                      setScreen('map');
+                    }}
+                    className="px-7 py-2.5 rounded-xl bg-amber-300 border-2 border-slate-900 font-black text-xl text-slate-900"
+                  >
+                    5단계 지도로 이동! ▶
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setActivePlayer(activePlayer === 'seeun' ? 'sehyun' : 'seeun');
+                      setStage4Step(1);
+                    }}
+                    className="px-7 py-2.5 rounded-xl bg-sky-500 text-white font-black text-xl"
+                  >
+                    다음 친구 작전 짜기 ▶
+                  </button>
+                )}
+              </div>
+            </div>
+          ) : stage4Step === 1 ? (
+            /* ---------- STEP 4-1: Big, Clear 6 Situation Cards ---------- */
+            <div className="flex-1 min-h-0 flex flex-col justify-between gap-3">
+              <div className="bg-sky-50 rounded-2xl border border-sky-200 px-4 py-2.5 text-center">
+                <div className="text-[20px] xl:text-[26px] font-black text-slate-900">
+                  언제 물 마시기가 제일 어려워요? 카드 1개를 골라 주세요!
+                </div>
+              </div>
+
+              <div className="flex-1 min-h-0 grid grid-cols-3 gap-3">
+                {DIFFICULT_SITUATIONS.map((item) => {
+                  const selected = s4.situationId === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        audio.playSfx('pop');
+                        updateS4({
+                          situationId: item.id,
+                          solution: item.solutions[0],
+                          when: item.defaults.when,
+                          where: item.defaults.where,
+                          how: item.defaults.how,
+                          strategyName: item.recommendedNames[0],
+                        });
+                        setStage4Step(2);
+                        setDialogue({
+                          expression: '웃음',
+                          text: `${curPlayer.shortName}아, "${item.title}" 상황이 어렵구나! 이제 해결 방법과 실천 계획을 정해 보자! ✨`,
+                          waiting: false,
+                        });
+                      }}
+                      className={`p-3.5 xl:p-4 rounded-2xl border-[3px] flex flex-col items-center justify-center text-center gap-1.5 transition-all active:scale-95 ${
+                        selected
+                          ? 'bg-amber-100 border-slate-900 shadow-md'
+                          : 'bg-slate-50 border-slate-200 hover:border-sky-400 hover:bg-sky-50'
+                      }`}
+                    >
+                      <span className="text-4xl xl:text-5xl">{item.emoji}</span>
+                      <span
+                        className={`px-2.5 py-0.5 rounded-full text-xs xl:text-sm font-black flex items-center gap-1 ${
+                          item.place === '학교' ? 'bg-sky-100 text-sky-800' : 'bg-emerald-100 text-emerald-800'
+                        }`}
+                      >
+                        {item.place === '학교' ? <School className="w-3.5 h-3.5" /> : <Home className="w-3.5 h-3.5" />}
+                        {item.place}
+                      </span>
+                      <span className="text-[18px] xl:text-[22px] font-black text-slate-900 leading-snug">
+                        {item.title}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ) : stage4Step === 2 && sit ? (
+            /* ---------- STEP 4-2: Big Solution Cards + When/Where/How ---------- */
+            <div className="flex-1 min-h-0 flex flex-col justify-between gap-3">
+              <div className="flex items-center justify-between bg-emerald-50 rounded-2xl border border-emerald-200 px-4 py-2">
+                <span className="text-base xl:text-xl font-black text-slate-900">
+                  고른 상황: {sit.emoji} {sit.title}
+                </span>
+                <span className="text-sm xl:text-base font-black text-emerald-800">
+                  💧 정수기 · 수돗물 · 물병 모두 OK!
+                </span>
+              </div>
+
+              {/* Solution Cards */}
+              <div>
+                <div className="text-base xl:text-lg font-black text-slate-700 mb-1.5">
+                  💡 어떤 해결 방법으로 해 볼까요?
+                </div>
+                <div className="grid grid-cols-2 gap-2.5">
+                  {sit.solutions.map((sol) => (
+                    <button
+                      key={sol}
+                      onClick={() => updateS4({ solution: sol })}
+                      className={`p-3 rounded-2xl border-2 text-left text-base xl:text-xl font-black transition-all ${
+                        s4.solution === sol
+                          ? 'bg-emerald-200 border-slate-900 text-slate-900 shadow-sm'
+                          : 'bg-slate-50 border-slate-200 text-slate-700 hover:border-emerald-400'
+                      }`}
+                    >
+                      ✓ {sol}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Large When / Where / How Inputs */}
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-slate-50 rounded-2xl border-2 border-slate-200 p-2.5">
+                  <label className="block text-base xl:text-lg font-black text-sky-700 mb-1">⏰ 언제</label>
+                  <input
+                    type="text"
+                    value={s4.when}
+                    onChange={(e) => updateS4({ when: e.target.value })}
+                    placeholder="예: 쉬는 시간마다"
+                    className="w-full px-3 py-2 rounded-xl bg-white border-2 border-slate-300 text-base xl:text-lg font-bold text-slate-900"
+                  />
+                </div>
+                <div className="bg-slate-50 rounded-2xl border-2 border-slate-200 p-2.5">
+                  <label className="block text-base xl:text-lg font-black text-emerald-700 mb-1">📍 어디서</label>
+                  <input
+                    type="text"
+                    value={s4.where}
+                    onChange={(e) => updateS4({ where: e.target.value })}
+                    placeholder="예: 교실 정수기에서"
+                    className="w-full px-3 py-2 rounded-xl bg-white border-2 border-slate-300 text-base xl:text-lg font-bold text-slate-900"
+                  />
+                </div>
+                <div className="bg-slate-50 rounded-2xl border-2 border-slate-200 p-2.5">
+                  <label className="block text-base xl:text-lg font-black text-amber-700 mb-1">💧 어떻게</label>
+                  <input
+                    type="text"
+                    value={s4.how}
+                    onChange={(e) => updateS4({ how: e.target.value })}
+                    placeholder="예: 물 한 컵 마시기"
+                    className="w-full px-3 py-2 rounded-xl bg-white border-2 border-slate-300 text-base xl:text-lg font-bold text-slate-900"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={() => setStage4Step(1)}
+                  className="px-5 py-2.5 rounded-xl bg-slate-100 border-2 border-slate-300 font-black text-base xl:text-lg text-slate-700"
+                >
+                  ◀ 상황 다시 고르기
+                </button>
+                <button
+                  onClick={() => {
+                    if (!s4.when.trim()) {
+                      setBlankFieldAlert(`"${curPlayer.shortName}아, [언제] 마실지 한 번 더 물어봐 주세요!"`);
+                      return;
+                    }
+                    if (!s4.where.trim()) {
+                      setBlankFieldAlert(`"${curPlayer.shortName}아, [어디서] 마실지 한 번 더 물어봐 주세요!"`);
+                      return;
+                    }
+                    if (!s4.how.trim()) {
+                      setBlankFieldAlert(`"${curPlayer.shortName}아, [어떻게] 마실지 한 번 더 물어봐 주세요!"`);
+                      return;
+                    }
+                    setStage4Step(3);
+                    setDialogue({
+                      expression: '응원',
+                      text: `정말 구체적이야! 이제 ${curPlayer.shortName}이만의 멋진 작전 이름을 지어 보자! 🏷️`,
+                      waiting: false,
+                    });
+                  }}
+                  className="px-7 py-2.5 rounded-xl bg-sky-500 text-white font-black text-lg xl:text-xl shadow-sm"
+                >
+                  다음: 작전 이름 짓기 ▶
+                </button>
+              </div>
+            </div>
+          ) : (
+            /* ---------- STEP 4-3: Big Strategy Name & Complete Card ---------- */
+            <div className="flex-1 min-h-0 flex flex-col justify-between gap-3">
+              <div className="bg-amber-50 rounded-2xl border-2 border-amber-200 p-4 text-center">
+                <div className="text-[20px] xl:text-[26px] font-black text-slate-900 mb-3">
+                  🏷️ {curPlayer.name}의 멋진 작전 이름을 지어 주세요!
+                </div>
+                <input
+                  type="text"
+                  value={s4.strategyName}
+                  onChange={(e) => updateS4({ strategyName: e.target.value })}
+                  placeholder="예: TV 탐정 물컵 작전"
+                  className="w-full max-w-lg px-4 py-3 rounded-2xl bg-white border-[3px] border-slate-900 text-[22px] xl:text-[28px] font-black text-center text-slate-900"
+                />
+              </div>
+
+              {sit && (
+                <div>
+                  <div className="text-base xl:text-lg font-black text-slate-600 mb-2 text-center">
+                    추천 이름에서 바로 고를 수도 있어요!
+                  </div>
+                  <div className="grid grid-cols-3 gap-2.5">
+                    {sit.recommendedNames.map((n) => (
+                      <button
+                        key={n}
+                        onClick={() => updateS4({ strategyName: n })}
+                        className={`p-3 rounded-2xl border-2 text-base xl:text-xl font-black transition-all ${
+                          s4.strategyName === n
+                            ? 'bg-amber-200 border-slate-900 text-slate-900'
+                            : 'bg-slate-50 border-slate-200 hover:border-amber-400 text-slate-800'
+                        }`}
+                      >
+                        ✨ {n}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={() => setStage4Step(2)}
+                  className="px-5 py-2.5 rounded-xl bg-slate-100 border-2 border-slate-300 font-black text-base xl:text-lg text-slate-700"
+                >
+                  ◀ 실천 계획 수정
+                </button>
+                <button
+                  onClick={() => handleCompleteStrategy(activePlayer)}
+                  className="px-8 py-3 rounded-2xl bg-amber-300 border-[3px] border-slate-900 shadow-[0_4px_0_#0F172A] font-black text-xl xl:text-2xl text-slate-900"
+                >
+                  ✨ 작전 카드 완성하기!
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    /* -------------------- STAGE 5: 복습 퀴즈로 방울이 화분 키우기 + 가정 안내 -------------------- */
+    if (screen === 'stage5') {
+      const currentQuiz = REVIEW_QUIZ_ITEMS[stage5QuizIdx];
+      const bothFinishedAll = players.seeun.stage5.completed && players.sehyun.stage5.completed;
+
+      const renderPlantSvg = (stage) => (
+        <svg viewBox="0 0 120 112" className="w-24 h-24 xl:w-28 xl:h-28 mx-auto">
+          {/* Pot */}
+          <path d="M35 78 L85 78 L78 106 L42 106 Z" fill="#F97316" stroke="#1E293B" strokeWidth="3" />
+          <rect x="30" y="70" width="60" height="10" rx="4" fill="#FB923C" stroke="#1E293B" strokeWidth="3" />
+          {/* Stage 0: Seed */}
+          {stage === 0 && (
+            <ellipse cx="60" cy="64" rx="8" ry="5" fill="#A16207" stroke="#1E293B" strokeWidth="2.5" />
+          )}
+          {/* Stage 1+: Sprout & Stem */}
+          {stage >= 1 && (
+            <>
+              <line x1="60" y1="70" x2="60" y2={stage >= 2 ? 32 : 48} stroke="#16A34A" strokeWidth="5.5" strokeLinecap="round" />
+              <ellipse cx="47" cy="54" rx="12" ry="6.5" transform="rotate(-25 47 54)" fill="#4ADE80" stroke="#1E293B" strokeWidth="2.5" />
+              <ellipse cx="73" cy="54" rx="12" ry="6.5" transform="rotate(25 73 54)" fill="#4ADE80" stroke="#1E293B" strokeWidth="2.5" />
+            </>
+          )}
+          {/* Stage 2+: Bigger leaves + bud */}
+          {stage >= 2 && (
+            <>
+              <ellipse cx="44" cy="40" rx="11" ry="6" transform="rotate(-35 44 40)" fill="#22C55E" stroke="#1E293B" strokeWidth="2.5" />
+              <ellipse cx="76" cy="40" rx="11" ry="6" transform="rotate(35 76 40)" fill="#22C55E" stroke="#1E293B" strokeWidth="2.5" />
+            </>
+          )}
+          {/* Stage 3: Full blooming water-drop flower! */}
+          {stage >= 3 && (
+            <g className="sticker-pop">
+              <circle cx="60" cy="22" r="15" fill="#38BDF8" stroke="#1E293B" strokeWidth="3" />
+              <circle cx="60" cy="22" r="6.5" fill="#FDE047" />
+              <text x="86" y="24" fontSize="20">✨</text>
+              <text x="18" y="26" fontSize="18">💧</text>
+            </g>
+          )}
+        </svg>
+      );
+
+      const stageLabel = (st) =>
+        st === 0 ? '씨앗 준비 중' : st === 1 ? '새싹 뾰족!' : st === 2 ? '잎사귀 쑥쑥!' : '물방울 꽃 활짝! 🌸';
+
+      return (
+        <div className="flex-1 min-h-0 flex flex-col gap-3 bg-white/95 rounded-[28px] border-[3px] border-sky-200 shadow-lg p-4 overflow-hidden">
+          {/* Sub-tabs */}
+          <div className="flex items-center justify-between gap-2 shrink-0">
+            <div className="flex gap-2">
+              <button
+                onClick={() => setStage5Tab('quiz')}
+                className={`px-4 py-1.5 rounded-xl border-2 text-sm xl:text-base font-black ${
+                  stage5Tab === 'quiz' ? 'bg-amber-200 border-slate-900' : 'bg-slate-50 border-slate-200 text-slate-600'
+                }`}
+              >
+                ① 복습 퀴즈 & 방울이 화분 🌱
+              </button>
+              <button
+                onClick={() => setStage5Tab('family')}
+                className={`px-4 py-1.5 rounded-xl border-2 text-sm xl:text-base font-black ${
+                  stage5Tab === 'family' ? 'bg-amber-200 border-slate-900' : 'bg-slate-50 border-slate-200 text-slate-600'
+                }`}
+              >
+                ② 가정 안내 카드 💌
+              </button>
+            </div>
+            <button
+              onClick={() => {
+                markStageDone(4);
+                setScreen('ending');
+                triggerCelebration('fireworks');
+              }}
+              className="px-4 py-1.5 rounded-xl bg-emerald-500 text-white font-black text-sm xl:text-base"
+            >
+              엔딩 보기 🎉
+            </button>
+          </div>
+
+          {stage5Tab === 'quiz' ? (
+            <div className="flex-1 min-h-0 grid grid-cols-12 gap-3.5 items-stretch">
+              {/* Left 7 cols: Big, Readable Review Quiz */}
+              <div className="col-span-7 flex flex-col justify-between bg-sky-50/70 rounded-2xl border-2 border-sky-200 p-4">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="px-3 py-0.5 rounded-full bg-sky-500 text-white text-xs xl:text-sm font-black">
+                      {currentQuiz.badge} ({stage5QuizIdx + 1} / 3)
+                    </span>
+                    <div className="flex gap-1">
+                      {REVIEW_QUIZ_ITEMS.map((q, i) => (
+                        <button
+                          key={q.id}
+                          onClick={() => {
+                            setStage5QuizIdx(i);
+                            setStage5Hint('');
+                          }}
+                          className={`w-7 h-7 rounded-full text-xs font-black border-2 ${
+                            stage5QuizIdx === i
+                              ? 'bg-amber-300 border-slate-900 text-slate-900'
+                              : 'bg-white border-slate-300 text-slate-500'
+                          }`}
+                        >
+                          {i + 1}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <h3 className="text-[20px] xl:text-[26px] font-black text-slate-900 leading-snug mb-3">
+                    {currentQuiz.question}
+                  </h3>
+
+                  <div className="space-y-2">
+                    {currentQuiz.options.map((opt) => {
+                      const curSolved = curPlayer.stage5.solvedQuizzes.includes(currentQuiz.id);
+                      const isPickedCorrect = curSolved && opt.isCorrect;
+                      return (
+                        <button
+                          key={opt.id}
+                          onClick={() => handleAnswerReviewQuiz(currentQuiz, opt, activePlayer)}
+                          className={`w-full px-4 py-3 rounded-2xl border-2 text-left text-base xl:text-[20px] font-black transition-all active:scale-[0.99] ${
+                            isPickedCorrect
+                              ? 'bg-emerald-200 border-slate-900 text-slate-900 shadow-sm'
+                              : 'bg-white border-sky-200 hover:border-sky-500 hover:bg-sky-50 text-slate-800'
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {stage5Hint && (
+                  <div className="mt-2 px-3 py-2 rounded-xl bg-amber-100 border border-amber-300 text-sm xl:text-base font-black text-amber-950">
+                    {stage5Hint}
+                  </div>
+                )}
+
+                {bothFinishedAll && (
+                  <button
+                    onClick={() => setStage5Tab('family')}
+                    className="mt-2 w-full py-2.5 rounded-xl bg-amber-300 border-2 border-slate-900 font-black text-lg xl:text-xl"
+                  >
+                    💌 가정 안내 카드 보기 ▶
+                  </button>
+                )}
+              </div>
+
+              {/* Right 5 cols: Both Learners' Growing Bangul Plants */}
+              <div className="col-span-5 flex flex-col justify-between gap-2.5">
+                {['seeun', 'sehyun'].map((pid) => {
+                  const pl = players[pid];
+                  const solvedCount = pl.stage5.solvedQuizzes.length;
+                  const isTurn = activePlayer === pid;
+                  return (
+                    <div
+                      key={pid}
+                      onClick={() => setActivePlayer(pid)}
+                      className={`flex-1 rounded-2xl border-2 p-2.5 flex items-center justify-between cursor-pointer transition-all ${
+                        isTurn
+                          ? pid === 'seeun'
+                            ? 'bg-sky-50 border-sky-400 shadow-sm'
+                            : 'bg-orange-50 border-orange-400 shadow-sm'
+                          : 'bg-slate-50 border-slate-200'
+                      }`}
+                    >
+                      <div className="pl-1">
+                        <div className="text-lg xl:text-xl font-black text-slate-900">{pl.name}의 화분</div>
+                        <div className="text-sm xl:text-base font-extrabold text-emerald-700 mt-0.5">
+                          {stageLabel(pl.stage5.plantStage)}
+                        </div>
+                        <div className="flex gap-1 mt-1.5">
+                          {[0, 1, 2].map((i) => (
+                            <span
+                              key={i}
+                              className={`px-2 py-0.5 rounded-full text-xs font-black ${
+                                i < solvedCount ? 'bg-emerald-200 text-emerald-900' : 'bg-slate-200 text-slate-500'
+                              }`}
+                            >
+                              {i < solvedCount ? '💧 완료' : `${i + 1}번`}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="shrink-0">{renderPlantSvg(pl.stage5.plantStage)}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            /* Tab 2: Family Take-Home Guide Card */
+            <div className="flex-1 min-h-0 flex flex-col justify-between gap-3">
+              <div className="grid grid-cols-2 gap-3.5 flex-1">
+                {['seeun', 'sehyun'].map((pid) => {
+                  const pl = players[pid];
+                  const stratName = pl.stage4.strategyName || '나만의 물 마시기 작전';
+                  return (
+                    <div key={pid} className="bg-slate-50 rounded-2xl border-2 border-sky-200 p-4 flex flex-col justify-between">
+                      <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                        <span className="font-black text-lg xl:text-xl text-sky-700">💌 {pl.name} 가정 안내 카드</span>
+                        <span className="text-xs xl:text-sm font-black px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                          우리 가족 물 한 컵 미션
+                        </span>
+                      </div>
+                      <div className="space-y-2.5 my-2 text-sm xl:text-base font-bold text-slate-700 leading-relaxed">
+                        <p>
+                          <span className="font-black text-emerald-700">1. 오늘 배운 것:</span> 목이 마를 때는 물이 몸에 꼭 필요하고, 우유 등은 간식 친구로 구분해요.
+                        </p>
+                        <p>
+                          <span className="font-black text-sky-700">2. 아이가 세운 작전:</span> "{stratName}" ({pl.stage4.when || '목마를 때'} · {pl.stage4.how || '물 한 컵 마시기'})
+                        </p>
+                        <p>
+                          <span className="font-black text-amber-700">3. 집에서 도와줄 수 있는 것:</span> 식탁이나 냉장고 앞줄에 물컵·물병을 두고, 오늘 저녁 "우리 가족 물 한 컵 미션"을 함께 응원해 주세요!
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <button
+                onClick={() => {
+                  markStageDone(4);
+                  setScreen('ending');
+                  triggerCelebration('fireworks');
+                }}
+                className="w-full py-3 rounded-2xl bg-amber-300 border-[3px] border-slate-900 shadow-[0_4px_0_#0F172A] font-black text-xl xl:text-2xl"
+              >
+                🎉 최종 엔딩 화면으로!
+              </button>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    /* -------------------- ENDING SCREEN -------------------- */
+    return (
+      <div className="flex-1 min-h-0 flex flex-col items-center justify-between bg-white/95 rounded-[28px] border-[3px] border-sky-200 shadow-lg p-5 text-center overflow-hidden">
+        <div>
+          <span className="px-4 py-1 rounded-full bg-amber-100 text-amber-800 font-black text-sm">
+            🎉 모험 완료 · 물 게이지 100% 달성!
+          </span>
+          <h2 className="text-[28px] xl:text-[40px] font-black text-slate-900 mt-1">
+            둘 다 멋진 물 마시기 대원! 💧✨
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 w-full max-w-3xl my-2">
+          {['seeun', 'sehyun'].map((pid) => {
+            const pl = players[pid];
+            return (
+              <div
+                key={pid}
+                className={`rounded-3xl border-2 p-4 text-left ${
+                  pl.theme === 'blue' ? 'bg-sky-50 border-sky-200' : 'bg-orange-50 border-orange-200'
+                }`}
+              >
+                <div className="flex items-center gap-2.5 mb-2">
+                  <ChildAvatar theme={pl.theme} gender={pl.gender} size={54} />
+                  <div>
+                    <div className="text-xl xl:text-2xl font-black text-slate-900">{pl.name}</div>
+                    <div className="text-sm font-bold text-slate-600">
+                      스티커 {pl.stickers.map((s, i) => (s ? ['💧', '🏠', '🌟'][i] : '⬜')).join(' ')}
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-white rounded-2xl border border-slate-200 p-3 text-sm xl:text-base font-bold text-slate-700">
+                  <div className="text-base xl:text-lg font-black text-sky-700 mb-1">
+                    🏷️ {pl.stage4.strategyName || '나만의 물 마시기 작전'}
+                  </div>
+                  <div>• 언제: {pl.stage4.when || '목이 마를 때'}</div>
+                  <div>• 어디서: {pl.stage4.where || '집/학교 정수기·물병'}</div>
+                  <div>• 어떻게: {pl.stage4.how || '물 한 컵 먼저 마시기'}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => triggerCelebration('fireworks')}
+            className="px-5 py-2.5 rounded-xl bg-amber-300 border-2 border-slate-900 font-black text-base"
+          >
+            🎆 폭죽 한 번 더
+          </button>
+          <button
+            onClick={() => setShowTeacherModal(true)}
+            className="px-5 py-2.5 rounded-xl bg-slate-100 border-2 border-slate-300 font-black text-base text-slate-800"
+          >
+            📋 교사 확인 화면
+          </button>
+          <button
+            onClick={resetWholeGame}
+            className="px-5 py-2.5 rounded-xl bg-sky-500 text-white font-black text-base"
+          >
+            🔄 처음부터 다시
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  /* ==========================================================================
+   * Clean, Spacious 16:9 Cartoon Game Shell
+   * ========================================================================== */
+  return (
+    <div className="h-screen w-screen overflow-hidden bg-gradient-to-br from-sky-100 via-cyan-50 to-amber-50 flex flex-col p-3 xl:p-4 relative select-none font-sans">
+      <style>{`
+        @keyframes bangulFloat { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
+        @keyframes bangulWait { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg); } }
+        @keyframes bangulDance { 0%, 100% { transform: translateY(0px) rotate(-7deg); } 50% { transform: translateY(-10px) rotate(7deg); } }
+        @keyframes bangulHop { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
+        @keyframes runAcross { 0% { transform: translateX(-45px); } 100% { transform: translateX(20px); } }
+        @keyframes confettiFall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(95vh) rotate(520deg); opacity: 0; } }
+        @keyframes fireworkPop { 0% { transform: scale(0.2); opacity: 1; } 60% { transform: scale(2.5); opacity: 0.9; } 100% { transform: scale(3.4); opacity: 0; } }
+        @keyframes stickerPop { 0% { transform: scale(0.5); } 70% { transform: scale(1.15); } 100% { transform: scale(1); } }
+        @keyframes cardFlipIn { 0% { transform: rotateY(90deg) scale(0.9); opacity: 0; } 100% { transform: rotateY(0deg) scale(1); opacity: 1; } }
+        @keyframes pulseBtn { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.025); } }
+        .bangul-float { animation: bangulFloat 2.4s ease-in-out infinite; }
+        .bangul-wait { animation: bangulWait 1.3s ease-in-out infinite; }
+        .bangul-dance { animation: bangulDance 0.65s ease-in-out infinite; }
+        .bangul-hop { animation: bangulHop 1s ease-in-out infinite; }
+        .run-across { animation: runAcross 1.2s ease-out forwards; }
+        .confetti-piece { position: absolute; border-radius: 4px; animation: confettiFall 1.3s ease-out forwards; }
+        .firework-dot { position: absolute; border-radius: 9999px; animation: fireworkPop 1.2s ease-out forwards; }
+        .sticker-pop { animation: stickerPop 0.45s ease-out; }
+        .card-flip-in { animation: cardFlipIn 0.6s ease-out; }
+        .pulse-btn { animation: pulseBtn 1.9s ease-in-out infinite; }
+      `}</style>
+
+      <CelebrationBurst
+        active={celebration.active}
+        kind={celebration.kind}
+        onSkip={() => setCelebration({ active: false, kind: 'confetti' })}
+      />
+
+      {/* ==================== CLEAN TOP HUD ==================== */}
+      <header className="h-14 xl:h-16 shrink-0 bg-white/95 rounded-[20px] border-2 border-sky-200 shadow-sm px-4 flex items-center justify-between gap-3 z-20">
+        {/* Title + 5-Star Progress */}
+        <div className="flex items-center gap-3 min-w-0">
+          <button
+            onClick={() => {
+              audio.playSfx('pop');
+              setScreen('map');
+            }}
+            className="font-black text-lg xl:text-2xl text-slate-900 truncate hover:text-sky-600"
+            title="지도로 이동"
+          >
+            💧 방울이의 물 마시기 대모험
+          </button>
+          <div className="hidden md:flex items-center gap-1 bg-slate-50 px-2.5 py-1 rounded-full border border-slate-200">
+            {STAGES_META.map((st, idx) => (
+              <button key={st.id} onClick={() => enterStage(st.id)} title={`${st.id}단계: ${st.title}`}>
+                <Star
+                  className={`w-5 h-5 ${
+                    completedStages[idx]
+                      ? 'fill-amber-400 text-amber-500'
+                      : currentStageNum === st.id
+                      ? 'fill-sky-300 text-sky-500'
+                      : 'fill-slate-200 text-slate-300'
+                  }`}
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Center Active Player Pill */}
+        <button
+          onClick={() => {
+            audio.playSfx('pop');
+            setActivePlayer((p) => (p === 'seeun' ? 'sehyun' : 'seeun'));
+          }}
+          className={`px-4 py-1.5 rounded-full font-black text-sm xl:text-base text-white shadow-sm transition-colors ${
+            activePlayer === 'seeun' ? 'bg-sky-500 hover:bg-sky-600' : 'bg-orange-500 hover:bg-orange-600'
+          }`}
+          title="클릭하거나 Tab 키로 입력 대상 전환"
+        >
+          지금 입력 중: {curPlayer.name} (Tab)
+        </button>
+
+        {/* Right: BGM + SFX + Teacher */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            onClick={() => audio.setBgmEnabled((v) => !v)}
+            className={`px-3 py-1.5 rounded-xl border-2 font-black text-xs xl:text-sm flex items-center gap-1 transition-colors ${
+              audio.bgmEnabled
+                ? 'bg-violet-100 border-violet-400 text-violet-900'
+                : 'bg-slate-50 border-slate-200 text-slate-600'
+            }`}
+            title="게임 배경음악 켜기/끄기"
+          >
+            <Music className="w-4 h-4" />
+            <span>{audio.bgmEnabled ? '배경음 ON' : '배경음 OFF'}</span>
+          </button>
+          <button
+            onClick={() => audio.setSfxEnabled((v) => !v)}
+            className={`px-3 py-1.5 rounded-xl border-2 font-black text-xs xl:text-sm flex items-center gap-1 transition-colors ${
+              audio.sfxEnabled
+                ? 'bg-emerald-100 border-emerald-400 text-emerald-900'
+                : 'bg-slate-50 border-slate-200 text-slate-600'
+            }`}
+            title="효과음 켜기/끄기 (기본 꺼짐)"
+          >
+            {audio.sfxEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+            <span>{audio.sfxEnabled ? '효과음 ON' : '효과음 OFF'}</span>
+          </button>
+          <button
+            onClick={() => setShowTeacherModal(true)}
+            className="px-3 py-1.5 rounded-xl bg-amber-100 border-2 border-amber-300 text-amber-900 font-black text-xs xl:text-sm hover:bg-amber-200"
+          >
+            [교사]
+          </button>
+        </div>
+      </header>
+
+      {/* ==================== MAIN 3-COLUMN ARENA ==================== */}
+      <main className="flex-1 min-h-0 flex gap-3 xl:gap-4 mt-3 z-10">
+        <PlayerPanel
+          player={players.seeun}
+          isActive={activePlayer === 'seeun'}
+          onSelect={() => {
+            audio.playSfx('pop');
+            setActivePlayer('seeun');
+          }}
+        />
+
+        <section className="flex-1 min-w-0 h-full flex flex-col">
+          {renderCenterStage()}
+          <RpgDialogueBox
+            expression={dialogue.expression}
+            text={dialogue.text}
+            waiting={dialogue.waiting}
+          />
+        </section>
+
+        <PlayerPanel
+          player={players.sehyun}
+          isActive={activePlayer === 'sehyun'}
+          onSelect={() => {
+            audio.playSfx('pop');
+            setActivePlayer('sehyun');
+          }}
+        />
+      </main>
+
+      {/* ==================== CLEAN BOTTOM EDUCATOR BAR (Zero Overlap) ==================== */}
+      <footer className="h-9 shrink-0 mt-2 flex items-center justify-between gap-2 z-30">
+        <div className="text-[11px] xl:text-xs font-bold text-slate-500 truncate">
+          시연용 학습자입니다. 실제 수업에서는 번호 또는 별명을 사용합니다.
+        </div>
+
+        <div className="bg-slate-900/75 hover:bg-slate-900/95 backdrop-blur-md text-white rounded-xl px-2.5 py-1 flex items-center gap-1.5 text-xs font-bold shadow-sm transition-opacity shrink-0">
+          <button
+            onClick={() => setLessonTimerRunning((r) => !r)}
+            className="px-2 py-0.5 rounded-lg bg-white/15 hover:bg-white/25 flex items-center gap-1"
+            title="10분 발표 타이머"
+          >
+            {lessonTimerRunning ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+            <span>{formatClock(lessonSeconds)}</span>
+          </button>
+          <button onClick={goPrevStage} className="p-1 rounded-lg bg-white/15 hover:bg-white/25" title="이전 스테이지">
+            <ChevronLeft className="w-3.5 h-3.5" />
+          </button>
+          <button onClick={goNextStage} className="p-1 rounded-lg bg-white/15 hover:bg-white/25" title="다음 스테이지">
+            <ChevronRight className="w-3.5 h-3.5" />
+          </button>
+          {currentStageNum > 0 && (
+            <button
+              onClick={resetCurrentStage}
+              className="px-2 py-0.5 rounded-lg bg-white/15 hover:bg-white/25 flex items-center gap-1"
+              title="이 스테이지 다시"
+            >
+              <RefreshCw className="w-3.5 h-3.5" /> 이 스테이지 다시
+            </button>
+          )}
+          <button
+            onClick={handleDemoAutoFill}
+            className="px-2.5 py-0.5 rounded-lg bg-amber-400 text-slate-900 font-black hover:bg-amber-300 flex items-center gap-1"
+            title="누를 때마다 다음 단계로 자동 채우기"
+          >
+            <Wand2 className="w-3.5 h-3.5" /> 이 단계 자동 채우기
+          </button>
+          <button
+            onClick={resetWholeGame}
+            className="px-2 py-0.5 rounded-lg bg-rose-500/80 hover:bg-rose-500 flex items-center gap-1"
+            title="처음부터 다시"
+          >
+            <RotateCcw className="w-3.5 h-3.5" /> 처음부터
+          </button>
+          <button
+            onClick={() => setShowApiModal(true)}
+            className={`p-1 rounded-lg ${geminiApiKey ? 'bg-emerald-500/80' : 'bg-white/15 hover:bg-white/25'}`}
+            title="Gemini API 키 설정 (선택)"
+          >
+            <KeyRound className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </footer>
+
+      {showTeacherModal && (
+        <TeacherModal players={players} onClose={() => setShowTeacherModal(false)} />
+      )}
+
+      {showApiModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/55 flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-md rounded-3xl border-2 border-slate-300 p-5 shadow-2xl">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
+                <KeyRound className="w-5 h-5 text-sky-600" /> Gemini API 키 (선택)
+              </h3>
+              <button onClick={() => setShowApiModal(false)} className="p-1 rounded-lg hover:bg-slate-100">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <p className="text-xs font-bold text-slate-500 mb-3">
+              키를 입력하면 방울이가 실시간 Gemini API로 응답하며, 2초 초과 또는 오류 시 미리 준비된 기본 응답이 즉시 표시됩니다. 키 없이도 모든 시연이 정상 작동합니다.
+            </p>
+            <input
+              type="password"
+              value={apiKeyDraft}
+              onChange={(e) => setApiKeyDraft(e.target.value)}
+              placeholder="AIza..."
+              className="w-full px-3 py-2 rounded-xl border-2 border-slate-300 text-sm font-bold mb-3"
+            />
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => {
+                  setGeminiApiKey('');
+                  setApiKeyDraft('');
+                  try {
+                    localStorage.removeItem('bangul_gemini_key');
+                  } catch {
+                    // ignore
+                  }
+                  setShowApiModal(false);
+                }}
+                className="px-4 py-1.5 rounded-xl bg-slate-100 text-sm font-black text-slate-700"
+              >
+                키 지우기
+              </button>
+              <button
+                onClick={() => {
+                  setGeminiApiKey(apiKeyDraft.trim());
+                  try {
+                    localStorage.setItem('bangul_gemini_key', apiKeyDraft.trim());
+                  } catch {
+                    // ignore
+                  }
+                  setShowApiModal(false);
+                }}
+                className="px-4 py-1.5 rounded-xl bg-sky-500 text-white text-sm font-black"
+              >
+                저장
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const rootEl = document.getElementById('root');
+if (rootEl) {
+  ReactDOM.createRoot(rootEl).render(<App />);
+}
+  </script>
+</body>
+</html>
